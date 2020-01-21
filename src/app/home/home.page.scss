@@ -1,0 +1,29 @@
+.thumnails{
+    overflow-x: scroll;
+    overflow-y: hidden;
+    .list-thumbnail{
+      height: 100%;
+      white-space: nowrap;
+      .img-thumb{
+        display: inline-block;
+        width: 154px;
+        line-height: 60px;
+      }
+    
+    }
+  }
+  ::-webkit-scrollbar { 
+    display: none; 
+  }  
+
+  .card{
+    border: 1px solid rgba(0,0,0,0.2);
+    margin: 4px;
+    border-radius: 0px 0px 8px 8px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+
+    h4{
+        padding-left: 4px;
+    }
+  }

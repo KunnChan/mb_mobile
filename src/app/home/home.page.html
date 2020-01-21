@@ -1,19 +1,59 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>home</ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content class="ion-padding">
 
-<ion-content>
-  <ion-slides [options]="slideOpts">
-    <ion-slide>
-      <h1>Slide 1</h1>
-    </ion-slide>
-    <ion-slide>
-      <h1>Slide 2</h1>
-    </ion-slide>
-    <ion-slide>
-      <h1>Slide 3</h1>
-    </ion-slide>
-  </ion-slides>
+  <h3>Top Albums</h3>
+  <div class="thumnails">
+    <div class="list-thumbnail">
+      <div class="img-thumb" *ngFor="let item of listCardsAdventure">
+        <div class="card">
+          <ion-img [src]="item.imageUrl"></ion-img>
+          <h4>{{ item.title }}</h4>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3>Popular</h3>
+
+  <ion-list>
+    <ion-item>
+      <ion-avatar slot="start">
+        <img src="./avatar-poe.png">
+      </ion-avatar>
+      <ion-label>
+        <h3>New Ride</h3>
+        <p>I just upgraded my X-Wing. Next time...</p>
+      </ion-label>
+    </ion-item>
+
+    <ion-item>
+      <ion-avatar slot="start">
+        <img src="./avatar-ben.png">
+      </ion-avatar>
+      <ion-label>
+        <h3>Move Along</h3>
+        <p>These aren't the droids you're looking for...</p>
+      </ion-label>
+    </ion-item>
+
+    <ion-item>
+      <ion-avatar slot="start">
+        <img src="./avatar-leia.png">
+      </ion-avatar>
+      <ion-label>
+        <h3>You're My Only Hope</h3>
+        <p>I've placed information vital to the survival...</p>
+      </ion-label>
+    </ion-item>
+
+    <ion-item>
+      <ion-avatar slot="start">
+        <img src="./avatar-yoda.png">
+      </ion-avatar>
+      <ion-label>
+        <h3>Size matters not</h3>
+        <p>Do or do not. There is no try...</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
 </ion-content>
