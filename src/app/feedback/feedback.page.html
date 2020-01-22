@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/tabs/setup"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Feedback</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="frm" (ngSubmit)="submit()">
+    <ion-list inset="true" lines="full">
+      <ion-item style="--border-width: 0 0 1px 0">
+        <ion-label position="floating">Name</ion-label>
+        <ion-input formControlName="name"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating" >Email or phone</ion-label>
+        <ion-input formControlName="emailOrphone"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating">Share your feedback for improving</ion-label>
+        <ion-textarea formControlName="feedback"></ion-textarea>
+      </ion-item>
+      
+      <ion-item class="ion-float-right">
+        <ion-button color="medium" type="submit" [disabled]="!frm.valid">Send
+          <ion-icon name="paper-plane"></ion-icon>
+        </ion-button>
+      </ion-item>
+    </ion-list>
+  </form>
+</ion-content>

@@ -28,6 +28,16 @@ const routes: Routes = [
         ]
       },
       {
+        path: 'songlist',
+        children: [
+          {
+            path: '',
+            loadChildren: () =>
+              import('../songlist/songlist.module').then(m => m.SonglistPageModule)
+          }
+        ]
+      },
+      {
         path: 'profile',
         children: [
           {
@@ -44,6 +54,36 @@ const routes: Routes = [
             path: '',
             loadChildren: () =>
               import('../home/home.module').then(m => m.HomePageModule)
+          }
+        ]
+      },
+      {
+        path: 'setup',
+        children: [
+          {
+            path: '',
+            loadChildren: () =>
+              import('../setup/setup.module').then(m => m.SetupPageModule)
+          }
+        ]
+      },
+      {
+        path: 'feedback',
+        children: [
+          {
+            path: '',
+            loadChildren: () =>
+              import('../feedback/feedback.module').then(m => m.FeedbackPageModule)
+          }
+        ]
+      },
+      {
+        path: 'about',
+        children: [
+          {
+            path: '',
+            loadChildren: () =>
+              import('../about/about.module').then(m => m.AboutPageModule)
           }
         ]
       },

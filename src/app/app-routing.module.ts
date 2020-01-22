@@ -21,6 +21,22 @@ const routes: Routes = [
   {
     path: 'profile',
     loadChildren: () => import('./profile/profile.module').then( m => m.ProfilePageModule)
+  },
+  {
+    path: 'songlist',
+    loadChildren: () => import('./songlist/songlist.module').then( m => m.SonglistPageModule)
+  },
+  {
+    path: 'setup',
+    loadChildren: () => import('./setup/setup.module').then( m => m.SetupPageModule)
+  },
+  {
+    path: 'feedback',
+    loadChildren: () => import('./feedback/feedback.module').then( m => m.FeedbackPageModule)
+  },
+  {
+    path: 'about',
+    loadChildren: () => import('./about/about.module').then( m => m.AboutPageModule)
   }
 ];
 @NgModule({

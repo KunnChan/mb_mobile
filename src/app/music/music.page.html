@@ -1,9 +1,46 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>music</ion-title>
+    <ion-title>Music</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/tabs/songlist" routerDirection="forward">
+        <ion-icon name="more"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
+  <div class="mgt8 ion-text-center">
+    <h5>You are the one</h5>
+    <img class="profileImage" src="../../assets/album.jpg" alt="album logo">
+    <p>Ni Ni Khin Zaw</p>
+  </div>
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar class="ion-text-center">
+    <ion-row>
+      <ion-col size="12">
+        <ion-range #range [(ngModel)]="progress" max="100" color="success" (touchend)="seek()" (mouseup)="seek()"></ion-range>
+      </ion-col>
+  
+      <ion-col size="12">
+        <ion-button fill="clear" (click)="prev()">
+          <ion-icon name="skip-backward"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" (click)="togglePlay(false)" *ngIf="!isPlaying">
+          <ion-icon name="play"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" (click)="togglePlay(true)" *ngIf="isPlaying">
+          <ion-icon name="pause"></ion-icon>
+        </ion-button>
+        <ion-button fill="clear" (click)="next()">
+          <ion-icon name="skip-forward"></ion-icon>
+        </ion-button>
+      </ion-col>
+      <ion-col size="12">
+        
+      </ion-col>
+    </ion-row>
+  </ion-toolbar>
+</ion-footer>

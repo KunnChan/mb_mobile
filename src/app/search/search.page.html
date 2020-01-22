@@ -5,5 +5,33 @@
 </ion-header>
 
 <ion-content>
+  <div slot="fixed">
+    <ion-item>
+      <ion-icon item-start name="cog" (click)="presentFilterPrompt()"></ion-icon>
+      <ion-input type="text" [value]="searchCriteria"></ion-input>
+      <ion-icon item-end name="close" *ngIf="searchCriteria !== ''" (click)="onClearSearchCriteria()"></ion-icon>
+      <ion-icon item-end name="search" ></ion-icon>
+    </ion-item>
+  </div>
+  <div class="pdt60">
 
+    <ion-virtual-scroll [items]="listCardsAdventure" approxItemHeight="100px">
+      <ion-item *virtualItem="let item; let itemBounds = bounds;">
+        <ion-avatar slot="start">
+          <img src="./avatar-leia.png">
+        </ion-avatar>
+        <ion-label>
+          <h3 style="display: inline-block;">You're My Only Hope</h3><ion-icon class="heart" name="heart-empty"></ion-icon>
+          <p>I've placed information vital to the survival...</p>
+        </ion-label>
+      </ion-item>
+  
+    </ion-virtual-scroll>
+
+    <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+      <ion-infinite-scroll-content
+        loadingSpinner="bubbles">
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
+  </div>
 </ion-content>

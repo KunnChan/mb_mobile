@@ -1,9 +1,51 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>profile</ion-title>
+    <ion-title>Profile</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/tabs/setup" routerDirection="forward">
+        <ion-icon name="construct"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <div class="mgt8 ion-text-center">
+    <img [src]="croppedImagepath" class="profileImage" alt="user logo" *ngIf="isProfilePhotoExist">
+    <img class="profileImage" *ngIf="!isProfilePhotoExist" src="../../assets/user.png" alt="user logo">
+  </div>
+  <p *ngIf="isLoading">Loading ...</p>
+  <div style="text-align: center;">
+    <ion-button color="medium" size="small" (click)="selectImage()">
+      <ion-icon slot="icon-only" name="cloud-upload"></ion-icon>
+    </ion-button>
+  </div>
 
+  <form [formGroup]="frm" (ngSubmit)="submit()">
+    <ion-list inset="true" lines="full">
+      <ion-item style="--border-width: 0 0 1px 0">
+        <ion-label>Username</ion-label>
+        <ion-input formControlName="username"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Name</ion-label>
+        <ion-input formControlName="name"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Email</ion-label>
+        <ion-input formControlName="email"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>Phone</ion-label>
+        <ion-input formControlName="phone"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label [ngClass]="fontClass">DOB</ion-label>
+        <ion-datetime display-format="DD-MMM-YYYY" formControlName="dob" picker-format="DD-MMM-YYYY"></ion-datetime>
+      </ion-item>
+      <ion-item class="ion-float-right">
+        <ion-button color="medium" type="submit" [disabled]="!frm.valid">Save</ion-button>
+      </ion-item>
+    </ion-list>
+  </form>
 </ion-content>
