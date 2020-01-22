@@ -13,6 +13,7 @@ export class MusicPage implements OnInit {
   player: Howl  = null;
   isPlaying = false;
   progress = 0;
+  songLength = 0;
 
   playlist = [
     {
@@ -58,6 +59,7 @@ export class MusicPage implements OnInit {
         this.isPlaying = true;
         this.activeTrack = track;
         this.updateProgress();
+        this.updateSongLength();
       },
       onend: () => {
         console.log("onend");
@@ -65,6 +67,7 @@ export class MusicPage implements OnInit {
       }
     })
     this.player.play();
+    
   }
 
   prev(){
@@ -91,9 +94,15 @@ export class MusicPage implements OnInit {
     this.player.seek(duration * (newValue / 100));
   }
 
+  updateSongLength(){
+    let duration = this.player.duration();
+    this.songLength = Math.round(duration / 60);
+  }
+
   updateProgress(){
     let seek = this.player.seek();
-    this.progress = (seek / this.player.duration()) * 100 || 0;
+    this.progress = (seek / this.player.duration()) * 100 || 0;  
+    
     setTimeout(() => {
       this.updateProgress();
     }, 1000);

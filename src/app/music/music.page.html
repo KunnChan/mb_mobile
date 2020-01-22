@@ -18,13 +18,14 @@
 </ion-content>
 
 <ion-footer>
-  <ion-toolbar class="ion-text-center">
+  <ion-toolbar >
     <ion-row>
       <ion-col size="12">
         <ion-range #range [(ngModel)]="progress" max="100" color="success" (touchend)="seek()" (mouseup)="seek()"></ion-range>
+        <div class="timer"><ion-label>1:23</ion-label><ion-label style="float: right;">{{ songLength }}</ion-label></div>
       </ion-col>
   
-      <ion-col size="12">
+      <ion-col size="12" class="ion-text-center">
         <ion-button fill="clear" (click)="prev()">
           <ion-icon name="skip-backward"></ion-icon>
         </ion-button>

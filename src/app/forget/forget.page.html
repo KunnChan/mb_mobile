@@ -1,0 +1,33 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Reset Password</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="mgt8 ion-text-center">
+    <img class="profileImage" src="../../assets/music.png" alt="app logo">
+  </div>
+  <form [formGroup]="frm" (ngSubmit)="submit()">
+    <ion-list inset="true" lines="full">
+      <ion-item style="--border-width: 0 0 1px 0">
+        <ion-label position="floating">Username</ion-label>
+        <ion-input formControlName="username"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label position="floating" >Email or Phone</ion-label>
+        <ion-input formControlName="emailOrphone"></ion-input>
+      </ion-item>
+      
+      <ion-item class="ion-float-right">
+        <ion-button color="medium" type="submit" [disabled]="!frm.valid">Reset Password
+          <ion-icon name="paper-plane"></ion-icon>
+        </ion-button>
+      </ion-item>
+    </ion-list>
+  </form>
+
+  <div class="ion-text-center">
+    <a routerLink="/login" routerDirection="forward">Login</a>
+  </div>
+</ion-content>

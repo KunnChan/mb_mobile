@@ -1,23 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormGroup, FormControl } from "@angular/forms";
 
+
 @Component({
-  selector: 'app-feedback',
-  templateUrl: './feedback.page.html',
-  styleUrls: ['./feedback.page.scss'],
+  selector: 'app-forget',
+  templateUrl: './forget.page.html',
+  styleUrls: ['./forget.page.scss'],
 })
-export class FeedbackPage implements OnInit {
+export class ForgetPage implements OnInit {
 
   frm: FormGroup;
 
   constructor() { 
     this.frm = new FormGroup({
-      name: new FormControl("", Validators.compose([Validators.required])),
+      username: new FormControl("", Validators.compose([])),
       emailOrphone: new FormControl("", Validators.compose([Validators.required])),
-      feedback: new FormControl("", Validators.compose([Validators.required])),
     });
   }
-
   ngOnInit() {
   }
 
@@ -26,4 +25,5 @@ export class FeedbackPage implements OnInit {
     console.log("onsubmit ", frmVal);
     
   }
+
 }
