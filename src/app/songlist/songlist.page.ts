@@ -84,33 +84,18 @@ export class SonglistPage implements OnInit {
 
     let options: FileUploadOptions = {
       headers: {
-        "Authorization": 'Bearer ',
-        "myOrigin": ""
       }
    }
-    const url = "https://doc-0k-30-docs.googleusercontent.com/docs/securesc/i4957hkea5365qq8bhm8dp5hifdae9uo/3fg47a3169l2ebg7i3lclhtbahca51pr/1579773600000/17991731165352973490/17991731165352973490/1hnOM0z0jZ8UHon7JTa7KzC9F04NRHXig?e=download&authuser=0&nonce=gspmth2jvqgh0&user=17991731165352973490&hash=piqjhl1o1a336utaq5kov0ejm3i2453e";
+    const url = "https://drive.google.com/file/d/1hnOM0z0jZ8UHon7JTa7KzC9F04NRHXig/view?usp=sharing";
 
     let path = null;
     if(this.platform.is("ios")){
       path = this.file.documentsDirectory;
     }else{
-      path = this.file.externalApplicationStorageDirectory;
+      path = this.file.externalDataDirectory;
     }
 
-    let test = "Application dir"+ this.file.applicationDirectory
-      + " applicationStorageDirectory : " + this.file.applicationStorageDirectory
-      + " cacheDirectory : " + this.file.cacheDirectory
-      + " dataDirectory : " + this.file.dataDirectory
-      + " externalCacheDirectory : " + this.file.externalCacheDirectory
-      + " externalDataDirectory : " + this.file.externalDataDirectory
-      + " externalRootDirectory : " + this.file.externalRootDirectory
-      + " sharedDirectory : " + this.file.sharedDirectory
-      + " syncedDataDirectory : " + this.file.syncedDataDirectory
-      + " tempDirectory : " + this.file.tempDirectory
-      + " applicationDirectory : " + this.file.applicationDirectory;
-
-      alert("Test directory" +test);
-    path = path + item.attach_file_name_f;
+    path = path + 'kevin.mp3'
 
     this.fileTransfer.download(url, path, true, options).then(res => {
       loading.dismiss();
