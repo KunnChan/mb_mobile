@@ -1,6 +1,6 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>search</ion-title>
+  <ion-toolbar color="primary">
+    <ion-title>Search</ion-title>
   </ion-toolbar>
 </ion-header>
 
@@ -10,10 +10,11 @@
       <ion-icon item-start name="cog" (click)="presentFilterPrompt()"></ion-icon>
       <ion-input type="text" [value]="searchCriteria"></ion-input>
       <ion-icon item-end name="close" *ngIf="searchCriteria !== ''" (click)="onClearSearchCriteria()"></ion-icon>
-      <ion-icon item-end name="search" ></ion-icon>
+      <ion-icon item-end name="search" (click)="onSearch()"></ion-icon>
     </ion-item>
   </div>
   <div class="pdt60">
+    <h5 class="listTitle">{{ listTitle }}</h5>
 
     <ion-virtual-scroll [items]="listCardsAdventure" approxItemHeight="100px">
       <ion-item *virtualItem="let item; let itemBounds = bounds;">
@@ -21,7 +22,9 @@
           <img src="./avatar-leia.png">
         </ion-avatar>
         <ion-label>
-          <h3 style="display: inline-block;">You're My Only Hope</h3><ion-icon class="heart" name="heart-empty"></ion-icon>
+          <h3 style="display: inline-block;">You're My Only Hope</h3>
+          <ion-icon (click)="onDownload(item)" class="heart" name="download" *ngIf="!item.isOnDownloading"></ion-icon>
+          <ion-spinner name="dots" class="heart" *ngIf="item.isOnDownloading"></ion-spinner>
           <p>I've placed information vital to the survival...</p>
         </ion-label>
       </ion-item>

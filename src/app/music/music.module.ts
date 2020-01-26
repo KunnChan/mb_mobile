@@ -7,14 +7,19 @@ import { IonicModule } from '@ionic/angular';
 import { MusicPageRoutingModule } from './music-routing.module';
 
 import { MusicPage } from './music.page';
+import { SongsComponent } from '../songs/songs.component';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    MusicPageRoutingModule
+    MusicPageRoutingModule,
+  
   ],
-  declarations: [MusicPage]
+  entryComponents: [
+    SongsComponent, MusicPage
+  ],
+  declarations: [SongsComponent, MusicPage]
 })
 export class MusicPageModule {}

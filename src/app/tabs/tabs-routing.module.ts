@@ -18,6 +18,16 @@ const routes: Routes = [
         ]
       },
       {
+        path: 'search/:albumId',
+        children: [
+          {
+            path: '',
+            loadChildren: () =>
+              import('../search/search.module').then(m => m.SearchPageModule)
+          }
+        ]
+      },
+      {
         path: 'music',
         children: [
           {
@@ -84,6 +94,16 @@ const routes: Routes = [
             path: '',
             loadChildren: () =>
               import('../about/about.module').then(m => m.AboutPageModule)
+          }
+        ]
+      },
+      {
+        path: 'playlist',
+        children: [
+          {
+            path: '',
+            loadChildren: () =>
+              import('../playlist/playlist.module').then(m => m.PlaylistPageModule)
           }
         ]
       },

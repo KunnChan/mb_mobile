@@ -1,6 +1,8 @@
 .thumnails{
     overflow-x: scroll;
     overflow-y: hidden;
+    background-color: white;
+    color: #174a5d;
     .list-thumbnail{
       height: 100%;
       white-space: nowrap;
@@ -24,6 +26,21 @@
     transition: 0.3s;
 
     h4{
-        padding-left: 4px;
+        padding-left: 6px;
     }
   }
+
+.dl{
+  float: right;
+  font-size: larger;
+}
+
+.titleColor{
+  color: #174a5d;
+}
+
+h4{
+  font-size: 18px;
+  font-weight: 500;
+}
+

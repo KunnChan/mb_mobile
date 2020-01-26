@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-search',
@@ -12,6 +13,7 @@ export class SearchPage implements OnInit {
   searchItems: any[] = [];
   searchCriteria: string = "";
   currentUser:any;
+  listTitle = "Recently Added";
 
   listCardsAdventure = [
     {
@@ -48,11 +50,15 @@ export class SearchPage implements OnInit {
     }
   ]
 
-  constructor(private alertController: AlertController) { 
+  constructor(private alertController: AlertController,
+     private router: Router, private route: ActivatedRoute) { 
 
   }
 
   ngOnInit() {
+    this.route.params.subscribe((params) => {
+      console.log('Params: ', params);
+    });
   }
 
   async presentFilterPrompt() {
@@ -138,6 +144,15 @@ export class SearchPage implements OnInit {
     // if (this.items.length >= this.employeeCount) {
     //   event.target.disabled = true;
     // }
+  }
+
+  onDownload(item){
+    let index = this.listCardsAdventure.indexOf(item);
+    this.listCardsAdventure[index]['isOnDownloading'] = true;
+  }
+
+  onSearch(){
+    this.listTitle = "Search Result for "+ this.searchCriteria
   }
 
 }

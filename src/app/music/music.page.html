@@ -1,8 +1,11 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-title>Music</ion-title>
     <ion-buttons slot="end">
-      <ion-button routerLink="/tabs/songlist" routerDirection="forward">
+      <ion-button (click)="onOpenSongList()">
+        <ion-icon name="list"></ion-icon>
+      </ion-button>
+      <ion-button routerLink="/tabs/playlist" routerDirection="forward">
         <ion-icon name="more"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -11,33 +14,46 @@
 
 <ion-content>
   <div class="mgt8 ion-text-center">
-    <h5>You are the one</h5>
+    <h5>{{ activeTrack.album }}</h5>
     <img class="profileImage" src="../../assets/album.jpg" alt="album logo">
-    <p>Ni Ni Khin Zaw</p>
+    <h3>{{ activeTrack.title }}</h3>
+    <span>{{ activeTrack.artist }}</span>
+    
   </div>
 </ion-content>
 
 <ion-footer>
   <ion-toolbar >
+   
     <ion-row>
       <ion-col size="12">
+        <ion-icon class="shuffelleft" (click)="onSwap()" name="swap" *ngIf="isRound"></ion-icon>
+        <ion-icon class="shuffelleft" (click)="onSwap()" name="sync" *ngIf="isOne"></ion-icon>
+        <ion-icon class="shuffelleft" (click)="onSwap()" name="shuffle" *ngIf="isShuffel"></ion-icon>
+        <ion-icon class="heartright" (click)="onLike()" name="heart-empty" *ngIf="!isLike"></ion-icon>
+        <ion-icon class="heartright" (click)="onLike()" name="heart" *ngIf="isLike"></ion-icon>
+      </ion-col>
+      <ion-col size="12">
         <ion-range #range [(ngModel)]="progress" max="100" color="success" (touchend)="seek()" (mouseup)="seek()"></ion-range>
-        <div class="timer"><ion-label>1:23</ion-label><ion-label style="float: right;">{{ songLength }}</ion-label></div>
+        <div class="timer" (click)="startPlay()"><ion-label>1:23</ion-label><ion-label style="float: right;">{{ activeTrack.songlength }}</ion-label></div>
       </ion-col>
   
       <ion-col size="12" class="ion-text-center">
-        <ion-button fill="clear" (click)="prev()">
+       
+        <ion-button shape="round" size="large" class="nextbtn" fill="outline" (click)="prev()">
           <ion-icon name="skip-backward"></ion-icon>
         </ion-button>
-        <ion-button fill="clear" (click)="togglePlay(false)" *ngIf="!isPlaying">
+        <ion-button shape="round" size="large" class="playbtn" fill="outline" (click)="togglePlay(false)" *ngIf="!isPlaying">
           <ion-icon name="play"></ion-icon>
         </ion-button>
-        <ion-button fill="clear" (click)="togglePlay(true)" *ngIf="isPlaying">
+        <ion-button shape="round" class="playbtn" fill="outline" (click)="togglePlay(true)" *ngIf="isPlaying">
           <ion-icon name="pause"></ion-icon>
         </ion-button>
-        <ion-button fill="clear" (click)="next()">
+        <ion-button shape="round" size="large" class="nextbtn" fill="outline" (click)="next()">
           <ion-icon name="skip-forward"></ion-icon>
         </ion-button>
+       
+        
       </ion-col>
       <ion-col size="12">
         

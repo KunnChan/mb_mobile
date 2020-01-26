@@ -1,16 +1,19 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>Play My Song</ion-title>
+  <ion-toolbar color="primary">
+    <ion-title>PlayMySong</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
 
-  <h3>Top Albums</h3>
+  <ion-text class="titleColor">
+    <h4 style="margin-top: 0px;">Top Albums</h4>
+  </ion-text>
+  
   <div class="thumnails">
     <div class="list-thumbnail">
       <div class="img-thumb" *ngFor="let item of listCardsAdventure">
-        <div class="card">
+        <div class="card" (click)="goToSearch(item)">
           <ion-img [src]="item.imageUrl"></ion-img>
           <h4>{{ item.title }}</h4>
         </div>
@@ -18,7 +21,9 @@
     </div>
   </div>
 
-  <h3>Popular</h3>
+  <ion-text class="titleColor">
+    <h4>Popular</h4>
+  </ion-text>
 
   <ion-virtual-scroll [items]="items" approxItemHeight="100px">
     <ion-item *virtualItem="let item; let itemBounds = bounds;">
@@ -26,7 +31,9 @@
         <img src="./avatar-leia.png">
       </ion-avatar>
       <ion-label>
-        <h3>You're My Only Hope</h3>
+        <h3 style="display: inline-block;">You're My Only Hope</h3>
+        <ion-icon (click)="onDownload(item)" class="dl titleColor" name="download" *ngIf="!item.isOnDownloading"></ion-icon>
+        <ion-spinner name="dots" class="dl" *ngIf="item.isOnDownloading"></ion-spinner>
         <p>I've placed information vital to the survival...</p>
       </ion-label>
     </ion-item>

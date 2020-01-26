@@ -4,7 +4,6 @@ import { CommonService } from '../services/common.service';
 import { ModalController, IonFab, AlertController, Platform } from "@ionic/angular";
 import { File } from '@ionic-native/file/ngx';
 import { FileTransfer, FileTransferObject, FileUploadOptions } from '@ionic-native/file-transfer/ngx';
-import { ThrowStmt } from '@angular/compiler';
 
 
 
@@ -57,53 +56,9 @@ export class SonglistPage implements OnInit {
     private platform: Platform, private file: File) { }
 
   ngOnInit() {
-  }
-
-  async onDownload(item:any) {
-
-    this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE)
-      .then(status => {
-        if (status.hasPermission) {
-          this.downloadFile(item);
-        } 
-        else {
-          this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE)
-            .then(status => {
-              if(status.hasPermission) {
-                this.downloadFile(item);
-              }
-            });
-        }
-      });
-  }
-
-  async downloadFile(item:any){
-
-    const loading = await this.commonService.createLoading("Downloading...");
-    await loading.present();
-
-    let options: FileUploadOptions = {
-      headers: {
-      }
-   }
-    const url = "https://drive.google.com/file/d/1hnOM0z0jZ8UHon7JTa7KzC9F04NRHXig/view?usp=sharing";
-
-    let path = null;
-    if(this.platform.is("ios")){
-      path = this.file.documentsDirectory;
-    }else{
-      path = this.file.externalDataDirectory;
-    }
-
-    path = path + 'kevin.mp3'
-
-    this.fileTransfer.download(url, path, true, options).then(res => {
-      loading.dismiss();
-      this.commonService.presentInfoAlert("Download success "+ res.toURL());
-    }).catch(error => {
-      loading.dismiss();
-      this.commonService.presentInfoAlert("Fail to Download "+ JSON.stringify(error));
-    });
+    let name = "1122 _Until You _Shayne Ward _Breathless _04.17 _5.9MB.mp3"  
+    let name2  = "2233 _When I Look At You _Miley Cyrus _The Time of Our Lives _04.14 _5.8MB.mp3";
+    let info = this.commonService.getSongInfo(name);
     
   }
 

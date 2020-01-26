@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar>
+  <ion-toolbar color="primary">
     <ion-title>Profile</ion-title>
     <ion-buttons slot="end">
       <ion-button routerLink="/tabs/setup" routerDirection="forward">
@@ -44,7 +44,7 @@
         <ion-datetime display-format="DD-MMM-YYYY" formControlName="dob" picker-format="DD-MMM-YYYY"></ion-datetime>
       </ion-item>
       <ion-item class="ion-float-right">
-        <ion-button color="medium" type="submit" [disabled]="!frm.valid">Save</ion-button>
+        <ion-button type="submit" [disabled]="!frm.valid">Save</ion-button>
       </ion-item>
     </ion-list>
   </form>
