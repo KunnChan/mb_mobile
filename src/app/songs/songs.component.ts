@@ -10,14 +10,14 @@ export class SongsComponent implements OnInit {
   
   items = []
 
-  onPlay = null;
+  activeTrackUid = null;
 
   constructor( private navParams: NavParams, private modalController: ModalController,
     ) {}
 
   ngOnInit() {
     this.items = this.navParams.data.playlist;
-    this.onPlay = this.navParams.data.onPlay;
+    this.activeTrackUid = this.navParams.data.activeTrackUid;
     
   }
 

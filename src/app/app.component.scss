@@ -4,6 +4,30 @@ ion-content {
 
 ion-label{
     h3 {
-        color: #639ca6;
+        color: #17495d;
     }
 }
+
+.detail{
+    color: #639ca6;
+    .artist{
+        font-size: smaller;
+    }
+    .count{
+        font-size: small;
+        float: right;
+    }
+}
+
+.rotate {
+    animation: rotation 8s infinite linear;
+  }
+  
+  @keyframes rotation {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(359deg);
+    }
+  }

@@ -24,7 +24,7 @@ export class ProfilePage {
   file: any = false;
   fileName:string = "";
   fontClass = "";
-  sysFont:string = "zg";
+  isEditing:boolean = false;
 
   croppedImagepath:any = "";
   isLoading = false;
@@ -112,6 +112,8 @@ export class ProfilePage {
   }
   
   async submit() {
+
+    this.onSignup()
     const frmVal = this.frm.value;
     const loading = await this.commonService.createLoading("Saving...");
     await loading.present();
@@ -132,6 +134,8 @@ export class ProfilePage {
     //   console.error("updateProfile, error ",error);
     //   await loading.dismiss();
     // })
+
+    await loading.dismiss();
   }
 
   updateProfilePhoto(reqData){
@@ -254,6 +258,10 @@ export class ProfilePage {
       alert('Error in showing image' + error);
       this.isLoading = false;
     });
+  }
+
+  onSignup(){
+    this.isEditing = !this.isEditing;
   }
 
 }

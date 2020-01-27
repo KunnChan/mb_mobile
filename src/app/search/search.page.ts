@@ -63,27 +63,27 @@ export class SearchPage implements OnInit {
 
   async presentFilterPrompt() {
     const alert = await this.alertController.create({
-      header: 'Search!',
+      header: 'Search',
       inputs: [
         {
-          name: 'EnrollNumber',
+          name: 'Title',
           type: 'text',
-          placeholder: 'EnrollNumber'
+          placeholder: 'Title'
         },
         {
-          name: 'EmployeeCode',
+          name: 'Album',
           type: 'text',
-          placeholder: 'EmployeeCode'
+          placeholder: 'Album'
         },
         {
-          name: 'EmployeeName',
+          name: 'Artist',
           type: 'text',
-          placeholder: 'EmployeeName'
+          placeholder: 'Artist'
         },
         {
-          name: 'Department',
+          name: 'Chorus',
           type: 'text',
-          placeholder: 'Department'
+          placeholder: 'Chorus'
         },
       ],
       buttons: [

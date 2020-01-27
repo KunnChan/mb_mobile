@@ -15,7 +15,7 @@
 <ion-content>
   <div class="mgt8 ion-text-center">
     <h5>{{ activeTrack.album }}</h5>
-    <img class="profileImage" src="../../assets/album.jpg" alt="album logo">
+    <img class="profileImage" src="../../assets/musiclogo.png" alt="album logo">
     <h3>{{ activeTrack.title }}</h3>
     <span>{{ activeTrack.artist }}</span>
     
@@ -34,7 +34,7 @@
         <ion-icon class="heartright" (click)="onLike()" name="heart" *ngIf="isLike"></ion-icon>
       </ion-col>
       <ion-col size="12">
-        <ion-range #range [(ngModel)]="progress" max="100" color="success" (touchend)="seek()" (mouseup)="seek()"></ion-range>
+        <ion-range #range [(ngModel)]="progress" max="100" color="primary" (touchend)="seek()" (mouseup)="seek()"></ion-range>
         <div class="timer" (click)="startPlay()"><ion-label>1:23</ion-label><ion-label style="float: right;">{{ activeTrack.songlength }}</ion-label></div>
       </ion-col>
   

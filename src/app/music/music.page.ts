@@ -42,9 +42,6 @@ export class MusicPage implements OnInit {
       this.path = this.file.externalDataDirectory;
     }
 
-    alert("this "+ this);
-
-
     if(this.path){
       this.onGetFiles();
       if(this.playlist.length > 0){
@@ -189,7 +186,8 @@ export class MusicPage implements OnInit {
     const modal = await this.modalController.create({
       component: SongsComponent,
       componentProps: {
-        playlist : this.playlist
+        playlist : this.playlist,
+        activeTrackUid: this.activeTrack['uid']
       }
     });
     modal.onDidDismiss().then(dataReturned => {

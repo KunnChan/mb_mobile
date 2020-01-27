@@ -15,7 +15,8 @@
     <ion-item-sliding *virtualItem="let song; let itemBounds = bounds;">
     <ion-item (click)="onSelect(song)">
       <ion-avatar slot="start">
-        <img src="./avatar-leia.png">
+        <img src="../../assets/disc_black.png"  *ngIf="activeTrackUid != song.uid">
+        <img class="rotate" src="../../assets/disc_black.png" *ngIf="activeTrackUid == song.uid">
       </ion-avatar>
       <ion-label>
         <h3 style="display: inline-block;">{{song.title}}</h3>

@@ -28,13 +28,15 @@
   <ion-virtual-scroll [items]="items" approxItemHeight="100px">
     <ion-item *virtualItem="let item; let itemBounds = bounds;">
       <ion-avatar slot="start">
-        <img src="./avatar-leia.png">
+        <img class="rotate" src="../../assets/disc_black.png">
       </ion-avatar>
       <ion-label>
         <h3 style="display: inline-block;">You're My Only Hope</h3>
         <ion-icon (click)="onDownload(item)" class="dl titleColor" name="download" *ngIf="!item.isOnDownloading"></ion-icon>
         <ion-spinner name="dots" class="dl" *ngIf="item.isOnDownloading"></ion-spinner>
-        <p>I've placed information vital to the survival...</p>
+        <div class="detail">
+          <span class="artist">Maroon 5</span><span class="count">20</span>
+        </div>
       </ion-label>
     </ion-item>
 

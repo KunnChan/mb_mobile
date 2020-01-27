@@ -10,18 +10,27 @@
 </ion-header>
 
 <ion-content>
-  <div class="mgt8 ion-text-center">
+  <div class="mgt8 ion-text-center" (click)="selectImage()">
     <img [src]="croppedImagepath" class="profileImage" alt="user logo" *ngIf="isProfilePhotoExist">
     <img class="profileImage" *ngIf="!isProfilePhotoExist" src="../../assets/user.png" alt="user logo">
   </div>
   <p *ngIf="isLoading">Loading ...</p>
-  <div style="text-align: center;">
-    <ion-button color="medium" size="small" (click)="selectImage()">
-      <ion-icon slot="icon-only" name="cloud-upload"></ion-icon>
-    </ion-button>
+
+  <div class="ion-text-center" *ngIf="!isEditing">
+    <ion-text color="tertiary">
+      <h3>120 points</h3>
+    </ion-text>
+    <ion-text color="primary">
+      <h2>akko12</h2>
+      <h4>Aung Ko Ko</h4>
+      <h4>akko@gmail.com</h4>
+      <h4>09795552266</h4>
+      <h4>07/02/1995</h4>
+    </ion-text>
+    <ion-button size="small" (click)="onSignup()">Signup</ion-button>
   </div>
 
-  <form [formGroup]="frm" (ngSubmit)="submit()">
+  <form *ngIf="isEditing" [formGroup]="frm" (ngSubmit)="submit()">
     <ion-list inset="true" lines="full">
       <ion-item style="--border-width: 0 0 1px 0">
         <ion-label>Username</ion-label>
