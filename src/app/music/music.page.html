@@ -13,17 +13,30 @@
 </ion-header>
 
 <ion-content>
-  <div class="mgt8 ion-text-center">
-    <h5>{{ activeTrack.album }}</h5>
-    <img class="profileImage" src="../../assets/musiclogo.png" alt="album logo">
-    <h3>{{ activeTrack.title }}</h3>
-    <span>{{ activeTrack.artist }}</span>
-    
-  </div>
+  <ion-slides>
+    <ion-slide>
+      <div scroll-y="false" class="mgt8 maincolor ion-text-center">
+        <h5>{{ activeTrack.album }}</h5>
+        <img class="profileImage" src="../../assets/musiclogo.png" alt="album logo">
+        <h3>{{ activeTrack.title }}</h3>
+        <span>{{ activeTrack.artist }}</span>
+      </div>
+  </ion-slide>
+    <ion-slide>
+      <div class="ion-text-center maincolor ion-padding">
+        <!-- {{ activeTrack.lyrics !== null ? activeTrack.lyrics : 'lyrics not available' }} -->
+        <span *ngIf="!activeTrack.lyrics">lyrics not available</span>
+        <div *ngIf="activeTrack.lyrics">
+          <h3 class="mgt0" >{{ activeTrack.title }}</h3>
+          <span [innerHTML]="activeTrack.lyrics"></span>
+        </div>
+      </div>
+    </ion-slide>
+  </ion-slides>
 </ion-content>
 
 <ion-footer>
-  <ion-toolbar >
+  <ion-toolbar class="maincolor" >
    
     <ion-row>
       <ion-col size="12">
@@ -52,8 +65,6 @@
         <ion-button shape="round" size="large" class="nextbtn" fill="outline" (click)="next()">
           <ion-icon name="skip-forward"></ion-icon>
         </ion-button>
-       
-        
       </ion-col>
       <ion-col size="12">
         

@@ -10,7 +10,7 @@ export class SongsComponent implements OnInit {
   
   items = []
 
-  activeTrackUid = null;
+  activeTrackUid = {};
 
   constructor( private navParams: NavParams, private modalController: ModalController,
     ) {}

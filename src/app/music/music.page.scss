@@ -41,6 +41,10 @@
     width: 60px;
 }
 
+.swiper-slide:not(.swiper-slide-active) > div {
+    display:none;
+  }
+
  .ic{
     color: #174a5d;
   }

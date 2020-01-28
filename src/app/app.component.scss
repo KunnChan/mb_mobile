@@ -8,6 +8,10 @@ ion-label{
     }
 }
 
+.maincolor{
+  color: #17495d;
+}
+
 .detail{
     color: #639ca6;
     .artist{
@@ -31,3 +35,7 @@ ion-label{
       transform: rotate(359deg);
     }
   }
+
+.mgt0{
+  margin-top: 0px;
+}
