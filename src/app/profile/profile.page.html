@@ -17,10 +17,8 @@
   <p *ngIf="isLoading">Loading ...</p>
 
   <div class="ion-text-center" *ngIf="!isEditing">
-    <ion-text color="tertiary">
-      <h3>120 points</h3>
-    </ion-text>
     <ion-text color="primary">
+      <h3>120 p</h3>
       <h2>akko12</h2>
       <h4>Aung Ko Ko</h4>
       <h4>akko@gmail.com</h4>
@@ -33,19 +31,19 @@
   <form *ngIf="isEditing" [formGroup]="frm" (ngSubmit)="submit()">
     <ion-list inset="true" lines="full">
       <ion-item style="--border-width: 0 0 1px 0">
-        <ion-label>Username</ion-label>
+        <ion-label position="floating" >Username</ion-label>
         <ion-input formControlName="username"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label>Name</ion-label>
+        <ion-label position="floating" >Name</ion-label>
         <ion-input formControlName="name"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label>Email</ion-label>
+        <ion-label position="floating" >Email</ion-label>
         <ion-input formControlName="email"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label>Phone</ion-label>
+        <ion-label position="floating">Phone</ion-label>
         <ion-input formControlName="phone"></ion-input>
       </ion-item>
       <ion-item>

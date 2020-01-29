@@ -83,7 +83,8 @@ export class MusicPage implements OnInit {
   player: Howl  = null;
   isPlaying = false;
   progress = 0;
-  songLength = 0;
+  songLength = "";
+  songLengthInSec = 0;
 
   isRound = true;
   isOne = false;
@@ -92,6 +93,7 @@ export class MusicPage implements OnInit {
 
   playlist = []
   path = null;
+  timer = '00:00';
 
   @ViewChild('range', {static: false}) range: IonRange;
 
@@ -123,7 +125,7 @@ export class MusicPage implements OnInit {
         this.activeTrack = track;
        }
       })
-    
+    this.play(this.activeTrack, null);
   }
 
   togglePlay(pause){
@@ -141,9 +143,6 @@ export class MusicPage implements OnInit {
       this.player.stop();
     }
 
-    // if(!track && this.activeTrack){
-    //   track = this.activeTrack;
-    // }
     let name = track.name;
 
     if(this.platform.is("ios")){
@@ -160,8 +159,9 @@ export class MusicPage implements OnInit {
   }
 
   play(track, data){
+   // track.path = '../../assets/music/When I Look At You.mp3';
     this.player = new Howl({
-      //src : [track.path],
+     // src : [track.path],
       src: data,
       html5: true,
       onplay: () =>{
@@ -206,13 +206,21 @@ export class MusicPage implements OnInit {
 
   updateSongLength(){
     let duration = this.player.duration();
-    this.songLength = Math.round(duration / 60);
+    this.songLength = this.getMinFromSecond(duration);
+  }
+
+  getMinFromSecond(second){
+    let minutes = Math.floor(second / 60);
+    let seconds = Math.floor(second % 60);
+    let min = minutes > 9 ? minutes : '0'+minutes;
+    let sec = seconds > 9 ? seconds : '0'+seconds;
+    return min + ":" + sec;
   }
 
   updateProgress(){
     let seek = this.player.seek();
-    this.progress = (seek / this.player.duration()) * 100 || 0;  
-    
+    this.progress = (seek / this.player.duration()) * 100 || 0;
+    this.timer = this.getMinFromSecond(seek);
     setTimeout(() => {
       this.updateProgress();
     }, 1000);

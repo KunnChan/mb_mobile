@@ -48,7 +48,7 @@
       </ion-col>
       <ion-col size="12">
         <ion-range #range [(ngModel)]="progress" max="100" color="primary" (touchend)="seek()" (mouseup)="seek()"></ion-range>
-        <div class="timer" (click)="startPlay()"><ion-label>1:23</ion-label><ion-label style="float: right;">{{ activeTrack.songlength }}</ion-label></div>
+        <div class="timer" (click)="startPlay()"><ion-label>{{ timer }}</ion-label><ion-label style="float: right;">{{ songLength }}</ion-label></div>
       </ion-col>
   
       <ion-col size="12" class="ion-text-center">

@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouteReuseStrategy } from '@angular/router';
 
+import { HttpClientModule, HTTP_INTERCEPTORS } from "@angular/common/http";
+
 import { IonicModule, IonicRouteStrategy } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
@@ -16,6 +18,8 @@ import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { Configfile } from './configfile';
+import { ErrorInterceptor } from './interceptors/error.interceptor';
+import { AuthInterceptor } from './interceptors/auth.interceptor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -24,6 +28,7 @@ import { Configfile } from './configfile';
     BrowserModule,
     IonicModule.forRoot(),
     AppRoutingModule,
+    HttpClientModule,
     IonicStorageModule.forRoot({
       name: '__songdb',
       driverOrder: ['indexeddb', 'sqlite', 'websql']
@@ -39,7 +44,17 @@ import { Configfile } from './configfile';
     Camera,
     AndroidPermissions,
     Configfile,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorInterceptor,
+      multi: true
+    },
+    {
+      provide : HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

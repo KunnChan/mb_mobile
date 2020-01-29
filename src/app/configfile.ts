@@ -10,6 +10,9 @@ import { HttpHeaders } from "@angular/common/http";
 export class Configfile {
 
   auth = null;
+  clientId = "kcrock";
+  clientSecret = "securekc";
+
   constructor(private storage: Storage){
     this.storage.get(this.keyAuth)
       .then(auth => {
@@ -24,9 +27,12 @@ export class Configfile {
     });
   }
 
-  getUrlEncodedHeader() {
+  getBasicAuthHeader() {
+
     const headers = new HttpHeaders();
     headers.append("Content-Type", "application/x-www-form-urlencoded");
+    headers.append("Accept", "application/json");
+    headers.append("Authorization", "Basic " + btoa(this.clientId + ':' + this.clientSecret));
     return headers;
   }
 

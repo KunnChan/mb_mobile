@@ -39,3 +39,16 @@ ion-label{
 .mgt0{
   margin-top: 0px;
 }
+
+ion-alert{
+  --width: 100% !important;
+  --max-width: 98% !important;
+
+  .alert-head{
+    background: #e8f5fa;
+    .alert-title{
+      color: #17495d;
+    }
+  }
+
+}
