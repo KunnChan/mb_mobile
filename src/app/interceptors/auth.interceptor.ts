@@ -23,7 +23,7 @@ export class AuthInterceptor implements HttpInterceptor {
                     "Accept": "application/json"
                 }
             });
-        } else if (currentUser.access_token) {
+        } else if (currentUser) {
             req = req.clone({
                 setHeaders: { 
                     "Authorization": `Basic ${currentUser.access_token}`,

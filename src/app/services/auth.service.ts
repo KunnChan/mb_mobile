@@ -52,4 +52,11 @@ export class AuthService {
     // return this.http.post(url, body, { headers }).pipe(map(res => res));
     return null;
   }
+
+  feedback(reqData): Observable<any>{
+    return this.http
+      .post(this.config.urlFeedback, reqData).pipe(map(user => {
+          return user;
+      }));
+  }
 }

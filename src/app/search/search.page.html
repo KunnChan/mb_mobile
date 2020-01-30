@@ -26,7 +26,7 @@
           <ion-icon (click)="onDownload(item)" class="heart" name="download" *ngIf="!item.isOnDownloading"></ion-icon>
           <ion-spinner name="dots" class="heart" *ngIf="item.isOnDownloading"></ion-spinner>
           <div class="detail">
-            <span class="artist">{{ item.artist }}</span><span class="count">20</span>
+            <span class="artist">{{ item.artist }}</span><span class="count">{{ item.downloads }}</span>
           </div>
         </ion-label>
       </ion-item>

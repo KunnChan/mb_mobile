@@ -29,11 +29,13 @@ export class Configfile {
   endpoint = "http://localhost:8188/xapiv1";
 
   urlToken = this.endpoint + "/oauth/token";
+  urlFeedback = this.endpoint + "/feedback/save";
   urlGetSongSingelQuery = this.endpoint + "/song/q";
+  urlGetSongMultiQuery = this.endpoint + "/song/query";
 
-  public keyAuth = "Auth";
-  public keyUserName = "USER_NAME";
-  public keyPassword = "PASSWORD";
-  public keyCurrentTrack = "CURRENT_TRACK";
+  keyAuth = "Auth";
+  keyUserName = "USER_NAME";
+  keyPassword = "PASSWORD";
+  keyCurrentTrack = "CURRENT_TRACK";
 
 }

@@ -31,7 +31,7 @@ export class SearchPage implements OnInit {
       console.log('Params: ', params);
     });
 
-    this.getSongSingelQuery(this.reqData);
+    this.getSongSingleQuery(this.reqData);
 
   }
 
@@ -40,22 +40,27 @@ export class SearchPage implements OnInit {
       header: 'Search',
       inputs: [
         {
-          name: 'Title',
+          name: 'title',
           type: 'text',
           placeholder: 'Title'
         },
         {
-          name: 'Album',
+          name: 'album',
           type: 'text',
           placeholder: 'Album'
         },
         {
-          name: 'Artist',
+          name: 'artist',
           type: 'text',
           placeholder: 'Artist'
         },
         {
-          name: 'Chorus',
+          name: 'language',
+          type: 'text',
+          placeholder: 'Language'
+        },
+        {
+          name: 'info',
           type: 'text',
           placeholder: 'Chorus'
         },
@@ -64,9 +69,7 @@ export class SearchPage implements OnInit {
        {
           text: 'Ok',
           handler: (data) => {
-           // this.currentUser.query = data;
-            this.bindToCriteria(data);
-            //this.searchEmployee(this.currentUser);
+            this.getSongByQuery(data);
           }
         }
       ]
@@ -75,18 +78,29 @@ export class SearchPage implements OnInit {
     await alert.present();
   }
 
-  bindToCriteria(data){
-    this.searchCriteria = "";
+  getSongByQuery(data){
 
-    this.searchCriteria += data.EnrollNumber ? data.EnrollNumber + ",": "";
-    this.searchCriteria += data.EmployeeCode ? data.EmployeeCode + ",": "";
-    this.searchCriteria += data.EmployeeName ? data.EmployeeName + ",": "";
-    this.searchCriteria += data.Department ? data.Department + ",": "";
+    this.searchCriteria = "";
+    this.searchCriteria += data.title ? data.title + ",": "";
+    this.searchCriteria += data.album ? data.album + ",": "";
+    this.searchCriteria += data.artist ? data.artist + ",": "";
+    this.searchCriteria += data.language ? data.language + ",": "";
+    this.searchCriteria += data.info ? data.info + ",": "";
+    
+    data.page = this.reqData.page;
+    data.size = this.reqData.size;
+    this.songService.getSongQuery(data)
+      .subscribe(result => {
+      this.items = result.content;
+      this.listTitle = "Total Resuls : " + result.totalElements;
+
+      }, error => {
+        console.log("Error in getting song ", error);
+      });
   }
 
   onClearSearchCriteria(){
     this.searchCriteria = "";
-
     this.onSearch();
   }
 
@@ -121,8 +135,17 @@ export class SearchPage implements OnInit {
     // }
   }
 
-  getSongSingelQuery(reqData){
+  getSongSingleQuery(reqData){
     this.songService.getRecentlyAdded(reqData)
+     .subscribe(result => {
+      this.items = result.content;
+     }, error => {
+        console.log("Error in getting song ", error);
+     });
+  }
+
+  getSongMultiQuery(reqData){
+    this.songService.getSongQuery(reqData)
      .subscribe(result => {
       this.items = result.content;
      }, error => {
@@ -136,7 +159,6 @@ export class SearchPage implements OnInit {
   }
 
   onSearch(){
-    this.listTitle = "Search Result: "+ this.searchCriteria
     if(this.searchCriteria){
       this.reqData.query = this.searchCriteria;
     }else{
@@ -146,6 +168,8 @@ export class SearchPage implements OnInit {
     this.songService.getRecentlyAdded(this.reqData)
       .subscribe(result => {
       this.items = result.content;
+      this.listTitle = "Total Resuls : " + result.totalElements;
+
       }, error => {
         console.log("Error in getting song ", error);
       });
