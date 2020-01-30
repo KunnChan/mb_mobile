@@ -91,7 +91,7 @@ export class MusicPage implements OnInit {
   isShuffel = false;
   isLike = false;
 
-  playlist = []
+  playlist = [];
   path = null;
   timer = '00:00';
 

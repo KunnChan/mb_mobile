@@ -8,16 +8,32 @@ import { AuthService } from '../services/auth.service';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
+    clientId = "kcrock";
+    clientSecret = "securekc";
     constructor(private authService: AuthService) { }
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        const currentUser = this.authService.currentUserValue;
-        console.log("INterceptor ", currentUser);
-        
-        if (currentUser) {
+        const currentUser = this.authService.currentUserValue();
+        if(req.url.endsWith('/oauth/token')){
+            let encryptKey = btoa(this.clientId + ':' + this.clientSecret);
             req = req.clone({
                 setHeaders: { 
-                    Authorization: `Basic ${currentUser['access_token']}`
+                    "Authorization": `Basic ${encryptKey}`,
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "Accept": "application/json"
+                }
+            });
+        } else if (currentUser.access_token) {
+            req = req.clone({
+                setHeaders: { 
+                    "Authorization": `Basic ${currentUser.access_token}`,
+                    "Content-Type": "application/json",
+                }
+            });
+        }else{
+            req = req.clone({
+                setHeaders: { 
+                    "Content-Type": "application/json",
                 }
             });
         }

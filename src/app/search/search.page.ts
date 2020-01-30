@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
 import { Router, ActivatedRoute } from '@angular/router';
+import { SongService } from '../services/song.service';
 
 @Component({
   selector: 'app-search',
@@ -10,48 +11,18 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class SearchPage implements OnInit {
 
   items: any[] = [];
-  searchItems: any[] = [];
   searchCriteria: string = "";
-  currentUser:any;
   listTitle = "Recently Added";
 
-  listCardsAdventure = [
-    {
-      title: "Aaaaaa",
-      imageUrl: "../../assets/album.jpg"
-    },
-    {
-      title: "Bbbbbb",
-      imageUrl: "../../assets/album.jpg"
-    },
-    {
-      title: "Cccccc",
-      imageUrl: "../../assets/album.jpg"
-    },
-    {
-      title: "Dddddd",
-      imageUrl: "../../assets/album.jpg"
-    },
-    {
-      title: "Eeeeee",
-      imageUrl: "../../assets/album.jpg"
-    },
-    {
-      title: "Ffffff",
-      imageUrl: "../../assets/album.jpg"
-    },
-    {
-      title: "Gggggg",
-      imageUrl: "../../assets/album.jpg"
-    },
-    {
-      title: "Hhhhhh",
-      imageUrl: "../../assets/album.jpg"
-    }
-  ]
+  reqData = {
+    query: null,
+    page: 0,
+    size: 10
+  }
 
   constructor(private alertController: AlertController,
-     private router: Router, private route: ActivatedRoute) { 
+    private songService: SongService,
+    private route: ActivatedRoute) { 
 
   }
 
@@ -59,6 +30,9 @@ export class SearchPage implements OnInit {
     this.route.params.subscribe((params) => {
       console.log('Params: ', params);
     });
+
+    this.getSongSingelQuery(this.reqData);
+
   }
 
   async presentFilterPrompt() {
@@ -90,7 +64,7 @@ export class SearchPage implements OnInit {
        {
           text: 'Ok',
           handler: (data) => {
-            this.currentUser.query = data;
+           // this.currentUser.query = data;
             this.bindToCriteria(data);
             //this.searchEmployee(this.currentUser);
           }
@@ -112,7 +86,8 @@ export class SearchPage implements OnInit {
 
   onClearSearchCriteria(){
     this.searchCriteria = "";
-    this.getGetEmployee(this.currentUser);
+
+    this.onSearch();
   }
 
   async getGetEmployee(employee: any){
@@ -129,8 +104,8 @@ export class SearchPage implements OnInit {
   }
 
   loadData(event) {
-    const { curRow, pageSize } = this.currentUser;
-    this.currentUser.curRow = curRow + pageSize; 
+  //  const { curRow, pageSize } = this.currentUser;
+ //   this.currentUser.curRow = curRow + pageSize; 
     // this.service.filterEmployee(this.currentUser).subscribe(res =>{
     //   this.items = this.items.concat(res.data[0]);
     //   this.searchItems = this.items;
@@ -146,13 +121,34 @@ export class SearchPage implements OnInit {
     // }
   }
 
+  getSongSingelQuery(reqData){
+    this.songService.getRecentlyAdded(reqData)
+     .subscribe(result => {
+      this.items = result.content;
+     }, error => {
+        console.log("Error in getting song ", error);
+     });
+  }
+
   onDownload(item){
-    let index = this.listCardsAdventure.indexOf(item);
-    this.listCardsAdventure[index]['isOnDownloading'] = true;
+    let index = this.items.indexOf(item);
+    this.items[index]['isOnDownloading'] = true;
   }
 
   onSearch(){
-    this.listTitle = "Search Result for "+ this.searchCriteria
+    this.listTitle = "Search Result: "+ this.searchCriteria
+    if(this.searchCriteria){
+      this.reqData.query = this.searchCriteria;
+    }else{
+      this.reqData.query = null
+    }
+    
+    this.songService.getRecentlyAdded(this.reqData)
+      .subscribe(result => {
+      this.items = result.content;
+      }, error => {
+        console.log("Error in getting song ", error);
+      });
   }
 
 }

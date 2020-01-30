@@ -7,8 +7,8 @@
 <ion-content>
   <div slot="fixed">
     <ion-item>
-      <ion-icon item-start name="cog" (click)="presentFilterPrompt()"></ion-icon>
-      <ion-input type="text" [value]="searchCriteria"></ion-input>
+      <ion-icon class="mgr4" item-start name="cog" (click)="presentFilterPrompt()"></ion-icon>
+      <ion-input type="text" [(ngModel)] ='searchCriteria'></ion-input>
       <ion-icon item-end name="close" *ngIf="searchCriteria !== ''" (click)="onClearSearchCriteria()"></ion-icon>
       <ion-icon item-end name="search" (click)="onSearch()"></ion-icon>
     </ion-item>
@@ -16,17 +16,17 @@
   <div class="pdt60">
     <h5 class="listTitle">{{ listTitle }}</h5>
 
-    <ion-virtual-scroll [items]="listCardsAdventure" approxItemHeight="100px">
+    <ion-virtual-scroll [items]="items" approxItemHeight="100px">
       <ion-item *virtualItem="let item; let itemBounds = bounds;">
         <ion-avatar slot="start">
           <img src="../../assets/disc_black.png">
         </ion-avatar>
         <ion-label>
-          <h3 style="display: inline-block;">You're My Only Hope</h3>
+          <h3 style="display: inline-block;">{{ item.title }}</h3>
           <ion-icon (click)="onDownload(item)" class="heart" name="download" *ngIf="!item.isOnDownloading"></ion-icon>
           <ion-spinner name="dots" class="heart" *ngIf="item.isOnDownloading"></ion-spinner>
           <div class="detail">
-            <span class="artist">Maroon 5</span><span class="count">20</span>
+            <span class="artist">{{ item.artist }}</span><span class="count">20</span>
           </div>
         </ion-label>
       </ion-item>

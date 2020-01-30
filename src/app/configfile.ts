@@ -10,8 +10,7 @@ import { HttpHeaders } from "@angular/common/http";
 export class Configfile {
 
   auth = null;
-  clientId = "kcrock";
-  clientSecret = "securekc";
+  
 
   constructor(private storage: Storage){
     this.storage.get(this.keyAuth)
@@ -27,18 +26,10 @@ export class Configfile {
     });
   }
 
-  getBasicAuthHeader() {
+  endpoint = "http://localhost:8188/xapiv1";
 
-    const headers = new HttpHeaders();
-    headers.append("Content-Type", "application/x-www-form-urlencoded");
-    headers.append("Accept", "application/json");
-    headers.append("Authorization", "Basic " + btoa(this.clientId + ':' + this.clientSecret));
-    return headers;
-  }
-
-  public endpoint = "http://192.168.101.7:8188/xapiv1";
-
-  public urlToken = this.endpoint + "/oauth/token";
+  urlToken = this.endpoint + "/oauth/token";
+  urlGetSongSingelQuery = this.endpoint + "/song/q";
 
   public keyAuth = "Auth";
   public keyUserName = "USER_NAME";

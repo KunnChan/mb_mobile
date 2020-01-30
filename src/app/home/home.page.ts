@@ -183,44 +183,6 @@ constructor(private androidPermissions: AndroidPermissions,
     })
   }
 
-  onGetFiles(){
-
-    this.getWriteExternalStoragePermission();
-
-    let path = null;
-    if(this.platform.is("ios")){
-      path = this.file.documentsDirectory;
-    }else{
-      path = this.file.externalDataDirectory;
-    }
-
-    let folderCount  = 0;
-    let fileCount = 0;
-    let fileInside = [];
-
-    this.file.listDir(path, "").then(result => {
-      for(let file of result){
-        if(file.isDirectory == true && file.name !='.' && file.name !='..'){
-        // Code if its a folder
-
-        folderCount++;
-
-      }else if(file.isFile == true){
-        // Code if its a file
-        let name=file.name // File name
-        //let path=file.path // File path
-         
-          fileInside.push(file)
-          fileCount++;
-        }
-      }
-
-
-      alert("folderCount "+ folderCount + ", fileCount "+ fileCount + ", files "+ JSON.stringify(fileInside))
-
-    })
-  }
-
   async goToSearch(item){
     this.route.navigate(['tabs/search', { albumId: item}]);
   }

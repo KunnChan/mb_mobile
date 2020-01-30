@@ -22,17 +22,15 @@ export class AuthService {
   }
 
   currentUserValue() {
-    console.log("current user ", this.currentUser);
-    
-    return this.currentUserSubject.value;
+    if(this.currentUserSubject)
+      return this.currentUserSubject.value;
+    return {};
   }
 
-  login(reqData){
-    const headers = this.config.getBasicAuthHeader();
-    
-    let body = "grant_type=password&username=" + reqData.userName + "&password=" + reqData.password;
-    this.http
-    .post(this.config.urlToken, body, { headers }).pipe(map(user => {
+  login(reqData): Observable<any>{
+    let body = "grant_type=password&username=" + reqData.username + "&password=" + reqData.password;
+    return this.http
+    .post(this.config.urlToken, body).pipe(map(user => {
         //user.authdata = window.btoa(email + ':' + password);
         this.storage.set(this.config.keyAuth, user);
         this.currentUserSubject.next(user);

@@ -9,6 +9,7 @@ import { ProfileService } from 'src/app/services/profile.service';
 import { CommonService } from 'src/app/services/common.service';
 import { FileTransfer, FileTransferObject, FileUploadOptions } from '@ionic-native/file-transfer/ngx';
 import { Configfile } from '../configfile';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-profile',
@@ -35,7 +36,7 @@ export class ProfilePage {
   };
 
   constructor(private service: ProfileService, private commonService: CommonService,
-    private storage: Storage,private config: Configfile, private camera: Camera,
+    private storage: Storage,private config: Configfile, private camera: Camera,private route: Router,
     private crop: Crop, public actionSheetController: ActionSheetController,
     private imgFile: File,private transfer: FileTransfer) {
 
@@ -262,6 +263,10 @@ export class ProfilePage {
 
   onSignup(){
     this.isEditing = !this.isEditing;
+  }
+
+  goLogin(){
+    this.route.navigate(['tabs/login']);
   }
 
 }

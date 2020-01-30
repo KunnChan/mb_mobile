@@ -108,6 +108,36 @@ const routes: Routes = [
         ]
       },
       {
+        path: 'login',
+        children: [
+          {
+            path: '',
+            loadChildren: () =>
+              import('../login/login.module').then(m => m.LoginPageModule)
+          }
+        ]
+      },
+      {
+        path: 'signup',
+        children: [
+          {
+            path: '',
+            loadChildren: () =>
+              import('../signup/signup.module').then(m => m.SignupPageModule)
+          }
+        ]
+      },
+      {
+        path: 'forget',
+        children: [
+          {
+            path: '',
+            loadChildren: () =>
+              import('../forget/forget.module').then(m => m.ForgetPageModule)
+          }
+        ]
+      },
+      {
         path: '',
         redirectTo: '/tabs/home',
         pathMatch: 'full'
