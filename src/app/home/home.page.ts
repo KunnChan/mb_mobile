@@ -10,6 +10,7 @@ import { FileTransfer, FileTransferObject, FileUploadOptions } from '@ionic-nati
 import { SearchPage } from '../search/search.page.js';
 import { SearchPageModule } from '../search/search.module.js';
 import { Router } from '@angular/router';
+import { DomSanitizer } from '@angular/platform-browser';
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
@@ -43,6 +44,8 @@ export class HomePage implements OnInit {
     path: "asdfasdfasd"
   }
 ];
+
+  imageUrl = null;
 
   slideOpts = {
     initialSlide: 1,
@@ -88,6 +91,7 @@ export class HomePage implements OnInit {
 constructor(private androidPermissions: AndroidPermissions,
   private commonService: CommonService, private transfer: FileTransfer,
   private modalController: ModalController, private route: Router,
+  private domSanitizer: DomSanitizer,
   private platform: Platform, private file: File) {
 
   }
@@ -143,6 +147,53 @@ constructor(private androidPermissions: AndroidPermissions,
           });
       }
     });
+  }
+
+  async downloadImage(item:any){
+
+    const loading = await this.commonService.createLoading("Downloading...");
+    await loading.present();
+
+    let url = "https://mega.nz/#!U5hw1IJK!nu5H9XhTC3ZejO4mVT-NPu3F9FHyHDiio5U6MtDVyGM";
+
+    // let path = null;
+    // if(this.platform.is("ios")){
+    //   path = this.file.documentsDirectory;
+    // }else{
+    //   path = this.file.externalDataDirectory;
+    // }
+
+    const megaFile = MegaFile.fromURL(url);
+
+    megaFile.loadAttributes((error, megaFile) => {
+      console.log("file name => ", megaFile.name) // file name
+      console.log("file size => ", megaFile.size) // file size in bytes
+    
+      //path = path + megaFile.name;
+    
+      megaFile.download((err, data) => {
+        if (err) throw err
+
+        const stringChar = data.reduce((data, byte)=> {
+          return data + String.fromCharCode(byte);
+          }, '');
+
+        let base64String = btoa(stringChar);
+       
+        
+        this.imageUrl = 'data:image/jpg;base64, ' + base64String;
+        loading.dismiss();
+        // this.file.writeFile(path, megaFile.name, data.buffer, {replace: true, append: false})
+        // .then(res => {
+        //   loading.dismiss();
+          
+        //   this.commonService.presentInfoAlert("Download success "+ res.toURL());
+        // }).catch(error => {
+        //   loading.dismiss();
+        //   this.commonService.presentInfoAlert("Fail to Download "+ JSON.stringify(error));
+        // });
+      })
+    })
   }
 
   async downloadFile(item:any){

@@ -13,8 +13,8 @@
   <div class="thumnails">
     <div class="list-thumbnail">
       <div class="img-thumb" *ngFor="let item of listCardsAdventure">
-        <div class="card" (click)="goToSearch(item)">
-          <ion-img [src]="item.imageUrl"></ion-img>
+        <div class="card" (click)="downloadImage()">
+          <ion-img [src]="imageUrl"></ion-img>
           <h4>{{ item.title }}</h4>
         </div>
       </div>

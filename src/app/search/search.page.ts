@@ -45,14 +45,14 @@ export class SearchPage implements OnInit {
           placeholder: 'Title'
         },
         {
-          name: 'album',
-          type: 'text',
-          placeholder: 'Album'
-        },
-        {
           name: 'artist',
           type: 'text',
           placeholder: 'Artist'
+        },
+        {
+          name: 'album',
+          type: 'text',
+          placeholder: 'Album'
         },
         {
           name: 'language',
@@ -104,18 +104,6 @@ export class SearchPage implements OnInit {
     this.onSearch();
   }
 
-  async getGetEmployee(employee: any){
-    // const loading = await this.commonService.createLoading("Fetching...");
-    // await loading.present();
-
-    // this.service.getEmployees(employee).subscribe(async res =>{
-    //   this.items = res.data[0];
-    //   this.searchItems = this.items;
-    //   this.employeeCount =  res.data[1][0] ? res.data[1][0].totalrecord : 0;
-    // }, async error => {
-    //   await this.commonService.presentErrorToast(error)
-    // },async () => await loading.dismiss())
-  }
 
   loadData(event) {
   //  const { curRow, pageSize } = this.currentUser;
