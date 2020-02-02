@@ -24,10 +24,60 @@ export class SongService {
         };
 
     return this.http
-      .post(this.config.urlGetSongSingelQuery, body).pipe(map(user => {
-          return user;
+      .post(this.config.urlGetSongSingelQuery, body).pipe(map(data => {
+          return data;
       }));
   }
+  getPopular(reqData): Observable<any>{
+    let body = { 
+        "query": null,
+        "isPopular" : true,
+        "page": {
+          "page" : reqData.page,
+          "size" : reqData.size
+          }
+        };
+
+    return this.http
+      .post(this.config.urlGetSongSingelQuery, body).pipe(map(data => {
+          return data;
+      }));
+  }
+
+  getSongById(songId): Observable<any>{
+    return this.http
+      .get(this.config.urlGetSong + songId).pipe(map(data => {
+          return data;
+      }));
+  }
+
+  getSongByAlbumId(albumId): Observable<any>{
+    return this.http
+      .get(this.config.urlGetSongByAlbumId + albumId).pipe(map(data => {
+          return data;
+      }));
+  }
+
+  getAlbum(albumId): Observable<any>{
+    return this.http
+      .get(this.config.urlAlbum + albumId).pipe(map(data => {
+          return data;
+      }));
+  }
+
+  getDownloadUrl(reqData): Observable<any>{
+
+    let body = { 
+        "id": reqData.id,
+        "userInfo" : reqData.userInfo,
+        };
+
+    return this.http
+      .post(this.config.urlGetDownloadUrl, body).pipe(map(data => {
+          return data;
+      }));
+  }
+
 
   getSongQuery(reqData): Observable<any>{
 
@@ -46,8 +96,23 @@ export class SongService {
         };
 
     return this.http
-      .post(this.config.urlGetSongMultiQuery, body).pipe(map(user => {
-          return user;
+      .post(this.config.urlGetSongMultiQuery, body).pipe(map(data => {
+          return data;
+      }));
+  }
+
+  getAlbums(reqData): Observable<any>{
+    let body = { 
+        "query": null,
+        "page": {
+          "page" : reqData.page,
+          "size" : reqData.size
+          }
+        };
+
+    return this.http
+      .post(this.config.urlAlbums, body).pipe(map(data => {
+          return data;
       }));
   }
 }

@@ -6,11 +6,8 @@ import { CommonService } from '../services/common.service';
 
 import { ModalController, IonFab, AlertController, Platform, NavParams, NavController } from "@ionic/angular";
 import { File } from '@ionic-native/file/ngx';
-import { FileTransfer, FileTransferObject, FileUploadOptions } from '@ionic-native/file-transfer/ngx';
-import { SearchPage } from '../search/search.page.js';
-import { SearchPageModule } from '../search/search.module.js';
 import { Router } from '@angular/router';
-import { DomSanitizer } from '@angular/platform-browser';
+import { SongService } from '../services/song.service.js';
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
@@ -18,32 +15,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class HomePage implements OnInit {
 
-  items: any[] = [
-  {
-    name: "AAaaaa",
-    path: "asdfasdfasd"
-  },
-  {
-    name: "BBbbbb",
-    path: "asdfasdfasd"
-  },
-  {
-    name: "CCcccc",
-    path: "asdfasdfasd"
-  },
-  {
-    name: "DDdddd",
-    path: "asdfasdfasd"
-  },
-  {
-    name: "EEdddd",
-    path: "asdfasdfasd"
-  },
-  {
-    name: "FFffff",
-    path: "asdfasdfasd"
-  }
-];
+  albums: any[] = [];
+  items: any[] = [];
 
   imageUrl = null;
 
@@ -51,54 +24,32 @@ export class HomePage implements OnInit {
     initialSlide: 1,
     speed: 100
   };
-  fileTransfer: FileTransferObject = this.transfer.create();
 
-  listCardsAdventure = [
-    {
-      title: "Aaaaaa",
-      imageUrl: "../../assets/album.jpg"
-    },
-    {
-      title: "Bbbbbb",
-      imageUrl: "../../assets/album.jpg"
-    },
-    {
-      title: "Cccccc",
-      imageUrl: "../../assets/album.jpg"
-    },
-    {
-      title: "Dddddd",
-      imageUrl: "../../assets/album.jpg"
-    },
-    {
-      title: "Eeeeee",
-      imageUrl: "../../assets/album.jpg"
-    },
-    {
-      title: "Ffffff",
-      imageUrl: "../../assets/album.jpg"
-    },
-    {
-      title: "Gggggg",
-      imageUrl: "../../assets/album.jpg"
-    },
-    {
-      title: "Hhhhhh",
-      imageUrl: "../../assets/album.jpg"
-    }
-  ]
+  reqData = {
+    query: null,
+    page: 0,
+    size: 10
+  }
+
+  reqAlbum = {
+    query: null,
+    page: 0,
+    size: 10
+  }
+
+  isLastAlbum = false;
+  isLastSong = false;
 
 constructor(private androidPermissions: AndroidPermissions,
-  private commonService: CommonService, private transfer: FileTransfer,
+  private commonService: CommonService, private songService: SongService,
   private modalController: ModalController, private route: Router,
-  private domSanitizer: DomSanitizer,
   private platform: Platform, private file: File) {
 
   }
 
   ngOnInit() {
-    
-    
+    this.getAlbums(this.reqAlbum);
+    this.getPopularSong(this.reqData);
   }
 
   logScrollStart(){
@@ -115,9 +66,8 @@ constructor(private androidPermissions: AndroidPermissions,
 
   onDownload(item){
     
-    let index = this.items.indexOf(item);
-    this.items[index]['isOnDownloading'] = true;
-
+    item['isOnDownloading'] = true;
+    this.downloadFile(item);
     this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE)
     .then(status => {
       if (status.hasPermission) {
@@ -201,6 +151,19 @@ constructor(private androidPermissions: AndroidPermissions,
     const loading = await this.commonService.createLoading("Downloading...");
     await loading.present();
 
+    let req = {
+      id: item.id,
+      userInfo: "Just info, will be update in future"
+    }
+    this.songService.getDownloadUrl(req)
+      .subscribe(item => {
+        console.log("Item ", item.downloadLinks[0]);
+        if(item.downloadLinks[0].linkUrl)
+        loading.dismiss();
+      }, error => {
+        console.log("Get song by Id error ", error);
+      })
+
    // let url = "https://mega.nz/#!t8pk2SYJ!7Saoz3s5xfvsPln-8BXkqBnK48m9er_hnTg_HnjHw_k";
     let url = "https://mega.nz/#!Mxxk0azQ!I_EN0GZL3OgYwxuIePGYxFt7KcmXL-A9bQoXS3kUcDs";
 
@@ -235,7 +198,60 @@ constructor(private androidPermissions: AndroidPermissions,
   }
 
   async goToSearch(item){
-    this.route.navigate(['tabs/search', { albumId: item}]);
+    this.route.navigate(['tabs/search', { albumId: item.id}]);
+  }
+
+  getAlbums(reqData){
+    this.songService.getAlbums(reqData)
+     .subscribe(result => {
+       this.isLastAlbum = result.last;
+      this.albums = this.albums.concat(result.content);
+     }, error => {
+        console.log("Error in getting albums ", error);
+     });
+  }
+
+  getMoreAlbums(){
+    let { page } = this.reqAlbum;
+    this.reqAlbum.page = page + 1;
+    this.getAlbums(this.reqAlbum);
+  }
+
+  getPopularSong(reqData){
+    this.songService.getPopular(reqData)
+     .subscribe(result => {
+      this.items = this.items.concat(result.content);
+      this.isLastSong = result.last;
+     }, error => {
+        console.log("Error in getting song ", error);
+     });
+  }
+
+  doRefresh(event) {
+    this.reqAlbum.page = 0;
+    this.reqAlbum.size = 10;
+    this.reqData.page = 0;
+    this.reqData.size = 10;
+
+    this.albums = [];
+    this.items = [];
+    this.getAlbums(this.reqAlbum);
+    this.getPopularSong(this.reqAlbum);
+    setTimeout(() => {
+      event.target.complete();
+    }, 500);
+  }
+
+  loadMore(event) {
+
+    if(this.isLastSong)
+      return;
+     const { page } = this.reqData;
+     this.reqData.page = page + 1;
+     this.getPopularSong(this.reqData);
+     setTimeout(() => {
+      event.target.complete();
+    }, 500);
   }
 
 }

@@ -30,8 +30,15 @@ export class Configfile {
 
   urlToken = this.endpoint + "/oauth/token";
   urlFeedback = this.endpoint + "/feedback/save";
+  urlGetSong = this.endpoint + "/song/";
   urlGetSongSingelQuery = this.endpoint + "/song/q";
   urlGetSongMultiQuery = this.endpoint + "/song/query";
+  urlGetSongByAlbumId = this.endpoint + "/song/album/";
+  urlGetDownloadUrl = this.endpoint + "/song/download";
+
+  urlAlbums = this.endpoint + "/album/q";
+  urlAlbum = this.endpoint + "/album/";
+
 
   keyAuth = "Auth";
   keyUserName = "USER_NAME";

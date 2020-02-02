@@ -13,8 +13,12 @@
       <ion-icon item-end name="search" (click)="onSearch()"></ion-icon>
     </ion-item>
   </div>
+  
   <div class="pdt60">
-    <h5 class="listTitle">{{ listTitle }}</h5>
+    <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+      <ion-refresher-content></ion-refresher-content>
+    </ion-refresher>
+    <p class="listTitle">{{ listTitle }}</p>
 
     <ion-virtual-scroll [items]="items" approxItemHeight="100px">
       <ion-item *virtualItem="let item; let itemBounds = bounds;">
@@ -33,7 +37,7 @@
   
     </ion-virtual-scroll>
 
-    <ion-infinite-scroll threshold="100px" (ionInfinite)="loadData($event)">
+    <ion-infinite-scroll *ngIf="!isLastSong" threshold="100px" (ionInfinite)="loadMore($event)">
       <ion-infinite-scroll-content
         loadingSpinner="bubbles">
       </ion-infinite-scroll-content>

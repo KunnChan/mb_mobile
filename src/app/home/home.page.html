@@ -6,16 +6,26 @@
 
 <ion-content class="ion-padding">
 
+  <ion-refresher style="background-color: #e7f5fa;" slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+
   <ion-text class="titleColor">
-    <h4 style="margin-top: 0px;">Top Albums</h4>
+    <h4 style="margin-top: 0px;">Latest Albums</h4>
   </ion-text>
   
   <div class="thumnails">
     <div class="list-thumbnail">
-      <div class="img-thumb" *ngFor="let item of listCardsAdventure">
-        <div class="card" (click)="downloadImage()">
-          <ion-img [src]="imageUrl"></ion-img>
-          <h4>{{ item.title }}</h4>
+      <div class="img-thumb" *ngFor="let item of albums">
+        <div class="card" (click)="goToSearch(item)">
+          <!-- <ion-img [src]="imageUrl"></ion-img> -->
+          <ion-img src="../../assets/album.png"></ion-img>
+          <span>{{ item.title }}</span>
+        </div>
+      </div>
+      <div *ngIf="!isLastAlbum" class="img-thumb" style="width: 44px;">
+        <div class="card" style="width: 40px; border-radius: 4px;" (click)="getMoreAlbums()">
+          <ion-img src="../../assets/plus.png"></ion-img>
         </div>
       </div>
     </div>
@@ -31,15 +41,21 @@
         <img src="../../assets/disc_black.png">
       </ion-avatar>
       <ion-label>
-        <h3 style="display: inline-block;">You're My Only Hope</h3>
+        <h3 style="display: inline-block;">{{ item.title }}</h3>
         <ion-icon (click)="onDownload(item)" class="dl titleColor" name="download" *ngIf="!item.isOnDownloading"></ion-icon>
         <ion-spinner name="dots" class="dl" *ngIf="item.isOnDownloading"></ion-spinner>
         <div class="detail">
-          <span class="artist">Maroon 5</span><span class="count">20</span>
+          <span class="artist">{{ item.artist }}</span><span class="count">{{ item.downloads }}</span>
         </div>
       </ion-label>
     </ion-item>
 
   </ion-virtual-scroll>
+
+  <ion-infinite-scroll *ngIf="!isLastSong" threshold="100px" (ionInfinite)="loadMore($event)">
+    <ion-infinite-scroll-content
+      loadingSpinner="bubbles">
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
 
 </ion-content>

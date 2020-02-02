@@ -12,13 +12,16 @@ export class SearchPage implements OnInit {
 
   items: any[] = [];
   searchCriteria: string = "";
-  listTitle = "Recently Added";
+  listTitle = "";
 
   reqData = {
     query: null,
     page: 0,
     size: 10
   }
+
+  isLastSong: boolean = false;
+  isSingleQuerySearch: boolean = true;
 
   constructor(private alertController: AlertController,
     private songService: SongService,
@@ -28,11 +31,14 @@ export class SearchPage implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe((params) => {
-      console.log('Params: ', params);
+      const { albumId } = params;
+      if(params.albumId){
+        this.getSongByAlbumId(albumId)
+      }else{
+        this.resetData();
+        this.getSongSingleQuery(this.reqData);
+      }
     });
-
-    this.getSongSingleQuery(this.reqData);
-
   }
 
   async presentFilterPrompt() {
@@ -48,11 +54,6 @@ export class SearchPage implements OnInit {
           name: 'artist',
           type: 'text',
           placeholder: 'Artist'
-        },
-        {
-          name: 'album',
-          type: 'text',
-          placeholder: 'Album'
         },
         {
           name: 'language',
@@ -82,21 +83,15 @@ export class SearchPage implements OnInit {
 
     this.searchCriteria = "";
     this.searchCriteria += data.title ? data.title + ",": "";
-    this.searchCriteria += data.album ? data.album + ",": "";
     this.searchCriteria += data.artist ? data.artist + ",": "";
     this.searchCriteria += data.language ? data.language + ",": "";
     this.searchCriteria += data.info ? data.info + ",": "";
     
+    this.resetData();
     data.page = this.reqData.page;
     data.size = this.reqData.size;
-    this.songService.getSongQuery(data)
-      .subscribe(result => {
-      this.items = result.content;
-      this.listTitle = "Total Resuls : " + result.totalElements;
-
-      }, error => {
-        console.log("Error in getting song ", error);
-      });
+    this.reqData = data;
+    this.getSongMultiQuery(data);
   }
 
   onClearSearchCriteria(){
@@ -104,38 +99,34 @@ export class SearchPage implements OnInit {
     this.onSearch();
   }
 
-
-  loadData(event) {
-  //  const { curRow, pageSize } = this.currentUser;
- //   this.currentUser.curRow = curRow + pageSize; 
-    // this.service.filterEmployee(this.currentUser).subscribe(res =>{
-    //   this.items = this.items.concat(res.data[0]);
-    //   this.searchItems = this.items;
-
-    //   event.target.complete();
-
-    // }, async error => {
-    //   console.error("getLeaveRequests, error ",error);
-    // })
-   // this.pageComplete = event.target;
-    // if (this.items.length >= this.employeeCount) {
-    //   event.target.disabled = true;
-    // }
-  }
-
   getSongSingleQuery(reqData){
+
+    this.isSingleQuerySearch = true;
     this.songService.getRecentlyAdded(reqData)
      .subscribe(result => {
-      this.items = result.content;
+      this.items = this.items.concat(result.content);
+      this.listTitle = "Total : " + result.totalElements;
      }, error => {
-        console.log("Error in getting song ", error);
+        console.log("Error in getting song single query ", error);
      });
   }
 
   getSongMultiQuery(reqData){
+    this.isSingleQuerySearch = false;
     this.songService.getSongQuery(reqData)
      .subscribe(result => {
-      this.items = result.content;
+      this.items = this.items.concat(result.content);
+      this.listTitle = "Total : " + result.totalElements;
+     }, error => {
+        console.log("Error in getting song multi query ", error);
+     });
+  }
+
+  getSongByAlbumId(albumId){
+    
+    this.songService.getSongByAlbumId(albumId)
+     .subscribe(result => {
+      this.items = result;
      }, error => {
         console.log("Error in getting song ", error);
      });
@@ -147,20 +138,59 @@ export class SearchPage implements OnInit {
   }
 
   onSearch(){
+   
+    let criteria = this.searchCriteria;
+    let query = "";
     if(this.searchCriteria){
-      this.reqData.query = this.searchCriteria;
+      query = this.searchCriteria;
     }else{
-      this.reqData.query = null
+      query = null
     }
+    this.resetData();
+    this.searchCriteria = criteria;
+    this.reqData.query = query;
     
-    this.songService.getRecentlyAdded(this.reqData)
-      .subscribe(result => {
-      this.items = result.content;
-      this.listTitle = "Total Resuls : " + result.totalElements;
+    this.getSongSingleQuery(this.reqData);
+   
+  }
 
-      }, error => {
-        console.log("Error in getting song ", error);
-      });
+  doRefresh(event) {
+    this.resetData();
+    this.getSongSingleQuery(this.reqData);
+    setTimeout(() => {
+      event.target.complete();
+    }, 500);
+  }
+
+  loadMore(event) {
+
+    if(this.isLastSong)
+      return;
+     const { page } = this.reqData;
+     this.reqData.page = page + 1;
+     if(!this.isSingleQuerySearch){
+      this.getSongMultiQuery(this.reqData);
+     }else{
+      this.getSongSingleQuery(this.reqData);
+     }
+     setTimeout(() => {
+      event.target.complete();
+    }, 500);
+  }
+
+  resetData(){
+    this.searchCriteria = "";
+    this.listTitle = "";
+
+    this.reqData = {
+      query: null,
+      page: 0,
+      size: 10
+    }
+
+    this.isLastSong = false;
+    this.isSingleQuerySearch = true;
+    this.items = [];
   }
 
 }
