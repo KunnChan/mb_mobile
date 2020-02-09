@@ -10,50 +10,21 @@
 </ion-header>
 
 <ion-content>
-  <div class="mgt8 ion-text-center" (click)="selectImage()">
+  <!-- <div class="mgt8 ion-text-center" (click)="selectImage()">
     <img [src]="croppedImagepath" class="profileImage" alt="user logo" *ngIf="isProfilePhotoExist">
     <img class="profileImage" *ngIf="!isProfilePhotoExist" src="../../assets/user.png" alt="user logo">
   </div>
-  <p *ngIf="isLoading">Loading ...</p>
+  <p *ngIf="isLoading">Loading ...</p> -->
 
   <div class="ion-text-center" *ngIf="!isEditing">
     <ion-text color="primary">
-      <h3>120 p</h3>
-      <h2>akko12</h2>
-      <h4>Aung Ko Ko</h4>
-      <h4>akko@gmail.com</h4>
-      <h4>09795552266</h4>
-      <h4>07/02/1995</h4>
+      <h4> R - {{ userInfo?.id }}</h4>
+      <h4>{{ userInfo?.username }}</h4>
+      <h4>{{ userInfo?.name }}</h4>
+      <h4>{{ userInfo?.phone }}</h4>
+      <h4>{{ userInfo?.email }}</h4>
+      <h4>{{ userInfo?.note }}</h4>
+      <h4>{{ userInfo?.dob | date }}</h4>
     </ion-text>
-    <ion-button size="small" (click)="goLogin()">Login</ion-button>
-    <ion-button size="small" (click)="onSignup()">Signup</ion-button>
   </div>
-
-  <form *ngIf="isEditing" [formGroup]="frm" (ngSubmit)="submit()">
-    <ion-list inset="true" lines="full">
-      <ion-item style="--border-width: 0 0 1px 0">
-        <ion-label position="floating" >Username</ion-label>
-        <ion-input formControlName="username"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating" >Name</ion-label>
-        <ion-input formControlName="name"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating" >Email</ion-label>
-        <ion-input formControlName="email"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating">Phone</ion-label>
-        <ion-input formControlName="phone"></ion-input>
-      </ion-item>
-      <ion-item>
-        <ion-label [ngClass]="fontClass">DOB</ion-label>
-        <ion-datetime display-format="DD-MMM-YYYY" formControlName="dob" picker-format="DD-MMM-YYYY"></ion-datetime>
-      </ion-item>
-      <ion-item class="ion-float-right">
-        <ion-button type="submit" [disabled]="!frm.valid">Save</ion-button>
-      </ion-item>
-    </ion-list>
-  </form>
 </ion-content>

@@ -35,31 +35,29 @@ export class ProfilePage {
     quality: 50
   };
 
+  userInfo = {
+    
+  }
+
   constructor(private service: ProfileService, private commonService: CommonService,
     private storage: Storage,private config: Configfile, private camera: Camera,private route: Router,
     private crop: Crop, public actionSheetController: ActionSheetController,
     private imgFile: File,private transfer: FileTransfer) {
-
-    this.frm = new FormGroup({
-      userId: new FormControl("",Validators.compose([])),
-      username: new FormControl("", Validators.compose([])),
-      name: new FormControl("", Validators.compose([])),
-      dob: new FormControl({value: ""}, Validators.compose([])),
-      email: new FormControl("", Validators.compose([])),
-      phone: new FormControl("", Validators.compose([])),
-    });
+    
   }
   
   ionViewDidEnter(){
-    // Promise.all([
-    //   this.storage.get(this.config.keyToken),
-    //   this.storage.get(this.config.keyServiceUrl)
-    // ]).then(values => {
-    //   this.currentUser.accessToken = values[0].access_token;
-    //   this.currentUser.serviceUrl = values[1];
-    //   this.sysFont = values[0].sysFont;
-    //   this.getEmpReqData(this.currentUser);
-    // }).catch(err => console.error(err));
+   
+    this.storage.get(this.config.keyUserInfo).then( info => {
+      if(!info){
+        this.route.navigate(['tabs/login']);
+      }
+      this.userInfo = info;      
+      
+    }).catch(error => {
+      console.log("Auth err ", error);
+
+    })
   }
 
   async getEmpReqData(reqData){
@@ -110,33 +108,6 @@ export class ProfilePage {
   onFileChange($event) : void {
     this.file = $event.target.files[0];
     this.fileName = this.file.name;
-  }
-  
-  async submit() {
-
-    this.onSignup()
-    const frmVal = this.frm.value;
-    const loading = await this.commonService.createLoading("Saving...");
-    await loading.present();
-
-    frmVal.accessToken = this.currentUser.accessToken;
-    frmVal.serviceUrl = this.currentUser.serviceUrl;
-    // this.service.updateProfile(frmVal).subscribe(async res =>{
-    //   if(res.data === true){
-    //     // if(this.file){
-    //     //   this.updateProfilePhoto(this.currentUser);
-    //     // }
-    //     await this.commonService.presentInfoAlert('Successfully saved');
-    //   }else{
-    //     await this.commonService.presentInfoAlert(res.data);
-    //   }
-    //   await loading.dismiss();
-    // }, async error => {
-    //   console.error("updateProfile, error ",error);
-    //   await loading.dismiss();
-    // })
-
-    await loading.dismiss();
   }
 
   updateProfilePhoto(reqData){
@@ -259,14 +230,6 @@ export class ProfilePage {
       alert('Error in showing image' + error);
       this.isLoading = false;
     });
-  }
-
-  onSignup(){
-    this.isEditing = !this.isEditing;
-  }
-
-  goLogin(){
-    this.route.navigate(['tabs/login']);
   }
 
 }

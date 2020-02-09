@@ -14,7 +14,7 @@ export class ForgetPage implements OnInit {
   constructor() { 
     this.frm = new FormGroup({
       username: new FormControl("", Validators.compose([])),
-      emailOrphone: new FormControl("", Validators.compose([Validators.required])),
+      email: new FormControl("", Validators.compose([Validators.required])),
     });
   }
   ngOnInit() {

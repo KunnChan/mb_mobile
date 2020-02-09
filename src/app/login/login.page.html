@@ -10,6 +10,8 @@
 <ion-content>
   <div class="mgt8 ion-text-center">
     <img class="profileImage" src="../../assets/icon.png" alt="app logo">
+    <p style="color: red;">{{errorText}}</p>
+
   </div>
   <form [formGroup]="frm" (ngSubmit)="submit()">
     <ion-list inset="true" lines="full">
@@ -31,7 +33,7 @@
   </form>
 
   <div class="ion-text-center">
-    <a routerLink="/tabs/signup" routerDirection="forward">Signup</a> |
-    <a routerLink="/tabs/forget" routerDirection="forward">Reset Password</a>
+    <a routerLink="/tabs/signup" routerDirection="forward">Signup</a>
+    <!-- <a routerLink="/tabs/forget" routerDirection="forward">Reset Password</a> -->
   </div>
 </ion-content>

@@ -7,7 +7,9 @@
 <ion-content>
   <div class="mgt8 ion-text-center">
     <img class="profileImage" src="../../assets/icon.png" alt="app logo">
+    <p style="color: red;">{{errorText}}</p>
   </div>
+ 
   <form [formGroup]="frm" (ngSubmit)="submit()">
     <ion-list inset="true" lines="full">
       <ion-item style="--border-width: 0 0 1px 0">
@@ -19,12 +21,16 @@
         <ion-input formControlName="name"></ion-input>
       </ion-item>
       <ion-item>
+        <ion-label position="floating" >Phone</ion-label>
+        <ion-input formControlName="phone"></ion-input>
+      </ion-item>
+      <ion-item>
         <ion-label position="floating" >Email</ion-label>
         <ion-input formControlName="email" type="email"></ion-input>
       </ion-item>
       <ion-item>
-        <ion-label position="floating" >Phone</ion-label>
-        <ion-input formControlName="phone"></ion-input>
+        <ion-label [ngClass]="fontClass">DOB</ion-label>
+        <ion-datetime display-format="DD-MMM-YYYY" formControlName="dob" picker-format="DD-MMM-YYYY"></ion-datetime>
       </ion-item>
       <ion-item>
         <ion-label position="floating" >Password</ion-label>

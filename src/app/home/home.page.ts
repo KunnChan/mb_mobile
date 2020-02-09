@@ -157,7 +157,6 @@ constructor(private androidPermissions: AndroidPermissions,
     }
     this.songService.getDownloadUrl(req)
       .subscribe(item => {
-        console.log("Item ", item.downloadLinks[0]);
         if(item.downloadLinks[0].linkUrl)
         loading.dismiss();
       }, error => {

@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormGroup, FormControl } from "@angular/forms";
+import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -10,8 +12,9 @@ import { Validators, FormGroup, FormControl } from "@angular/forms";
 export class SignupPage implements OnInit {
 
   frm: FormGroup;
+  errorText = "";
 
-  constructor() { 
+  constructor(private service: AuthService, private route: Router,) { 
     this.frm = new FormGroup({
       username: new FormControl("", Validators.compose([Validators.required])),
       name: new FormControl("", Validators.compose([Validators.required])),
@@ -19,6 +22,7 @@ export class SignupPage implements OnInit {
       phone: new FormControl("", Validators.compose([Validators.required])),
       confirm: new FormControl("", Validators.compose([Validators.required])),
       password: new FormControl("", Validators.compose([Validators.required])),
+      dob: new FormControl("", Validators.compose([Validators.required])),
     });
   }
 
@@ -26,8 +30,19 @@ export class SignupPage implements OnInit {
   }
 
   async submit() {
+    this.errorText = "";
     const frmVal = this.frm.value;
-    console.log("onsubmit ", frmVal);
+    if(frmVal.password !== frmVal.confirm){
+      this.errorText = "Password not match!"
+      return;
+    }
+
+    this.service.register(frmVal)
+      .subscribe(result => {
+        this.route.navigate(['tabs/login']);
+      }, error => {
+        this.errorText = "Invalid Username or password is too short!"
+      })
     
   }
 

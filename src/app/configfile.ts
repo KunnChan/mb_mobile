@@ -39,9 +39,13 @@ export class Configfile {
   urlAlbums = this.endpoint + "/album/q";
   urlAlbum = this.endpoint + "/album/";
 
+  urlSaveUser = this.endpoint + "/user/save";
+  urlUserInfo = this.endpoint + "/shield/user/username/";
+
 
   keyAuth = "Auth";
   keyUserName = "USER_NAME";
+  keyUserInfo = "USER_INFO";
   keyPassword = "PASSWORD";
   keyCurrentTrack = "CURRENT_TRACK";
 

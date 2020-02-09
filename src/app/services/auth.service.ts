@@ -31,8 +31,9 @@ export class AuthService {
     let body = "grant_type=password&username=" + reqData.username + "&password=" + reqData.password;
     return this.http
     .post(this.config.urlToken, body).pipe(map(user => {
-        //user.authdata = window.btoa(email + ':' + password);
-        this.storage.set(this.config.keyAuth, user);
+        this.storage.set(this.config.keyUserName, reqData.username);
+        this.storage.set(this.config.keyAuth, user)
+        .then(res =>  this.getUserInfo(reqData.username))
         this.currentUserSubject.next(user);
         return user;
     }));
@@ -58,5 +59,24 @@ export class AuthService {
       .post(this.config.urlFeedback, reqData).pipe(map(user => {
           return user;
       }));
+  }
+
+  register(reqData): Observable<any>{
+    return this.http
+      .post(this.config.urlSaveUser, reqData).pipe(map(data => {
+          return data;
+      }));
+  }
+
+  getUserInfo(username){
+    return this.http
+      .get(this.config.urlUserInfo + username).pipe(map(data => {
+          return data;
+      })).subscribe(result => {
+        this.storage.set(this.config.keyUserInfo, result);
+      }, error => {
+        console.log("Error ", error);
+        
+      })
   }
 }

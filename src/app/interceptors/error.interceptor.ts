@@ -22,8 +22,6 @@ export class ErrorInterceptor implements HttpInterceptor {
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(req).pipe(catchError(err => {
 
-            console.log("error from interceptor ", err);
-            
             if (err.error.error === "invalid_grant") {
                 const error = err.error.message || err.statusText;
                 //alert("Invalid Grant : "+ error + " }=> "+ JSON.stringify(err.error))

@@ -125,7 +125,7 @@ export class MusicPage implements OnInit {
         this.activeTrack = track;
        }
       })
-    this.play(this.activeTrack, null);
+   // this.play(this.activeTrack, null);
   }
 
   togglePlay(pause){
@@ -160,6 +160,8 @@ export class MusicPage implements OnInit {
 
   play(track, data){
    // track.path = '../../assets/music/When I Look At You.mp3';
+   console.log("track ", track, data);
+   
     this.player = new Howl({
      // src : [track.path],
       src: data,
