@@ -46,6 +46,8 @@ export class CommonService {
     await alert.present();
   }
 
+  
+
   getSongInfo(name){
     //uid _Title _artist _album _length _size
     //1122 _You are the one _Ni Ni Khin Zaw _Red _3.12 _4.5MB.mp3

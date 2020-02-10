@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { Configfile } from '../configfile';
 import { HttpClient } from '@angular/common/http';
 import { map } from "rxjs/operators";
+import { Device } from '@ionic-native/device/ngx';
+import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { Storage } from '@ionic/storage';
 
@@ -12,19 +14,46 @@ export class AuthService {
 
   private currentUserSubject: BehaviorSubject<any>;
   public currentUser: Observable<any>;
+  lattlonn = "";
 
-  constructor(private config: Configfile, private http: HttpClient, private storage: Storage) { 
+  constructor(private config: Configfile, private http: HttpClient,
+    private device: Device,private geolocation: Geolocation,
+    private storage: Storage) { 
     this.storage.get(this.config.keyAuth)
       .then(auth => {
         this.currentUserSubject = new BehaviorSubject<any>(auth);
         this.currentUser = this.currentUserSubject.asObservable();
       })
+    this.geolocation.getCurrentPosition()
+      .then(resp => {
+        let latt = resp.coords.latitude;
+        let lonn = resp.coords.longitude;
+        this.lattlonn = latt + "," + lonn;
+      }).catch(error=> {
+        console.log("get location error ", error);
+    });
   }
 
   currentUserValue() {
-    if(this.currentUserSubject)
-      return this.currentUserSubject.value;
-    return {};
+     let information = {
+       osVersion: this.device.version,
+       uuid: this.device.uuid,
+       manufacturer: this.device.manufacturer,
+       model: this.device.model,
+       platform: this.device.platform,
+       lattlonn: this.lattlonn
+     }
+    if(this.currentUserSubject){
+      let value = this.currentUserSubject.value;
+      return {
+        value,
+        information
+      }
+    }
+    return {
+      value: null,
+      information: information
+    };
   }
 
   login(reqData): Observable<any>{

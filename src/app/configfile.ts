@@ -34,7 +34,7 @@ export class Configfile {
   urlGetSongSingelQuery = this.endpoint + "/song/q";
   urlGetSongMultiQuery = this.endpoint + "/song/query";
   urlGetSongByAlbumId = this.endpoint + "/song/album/";
-  urlGetDownloadUrl = this.endpoint + "/song/download";
+  urlGetDownloadUrl = this.endpoint + "/shield/song/download";
 
   urlAlbums = this.endpoint + "/album/q";
   urlAlbum = this.endpoint + "/album/";

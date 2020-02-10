@@ -3,11 +3,11 @@ import "../../app/mega.js";
 import { File as MegaFile } from "../../app/mega.js";
 import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 import { CommonService } from '../services/common.service';
-
-import { ModalController, IonFab, AlertController, Platform, NavParams, NavController } from "@ionic/angular";
 import { File } from '@ionic-native/file/ngx';
 import { Router } from '@angular/router';
 import { SongService } from '../services/song.service.js';
+import { AuthService } from '../services/auth.service.js';
+import { Platform } from '@ionic/angular';
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
@@ -40,10 +40,9 @@ export class HomePage implements OnInit {
   isLastAlbum = false;
   isLastSong = false;
 
-constructor(private androidPermissions: AndroidPermissions,
+constructor(private androidPermissions: AndroidPermissions, private platform: Platform,
   private commonService: CommonService, private songService: SongService,
-  private modalController: ModalController, private route: Router,
-  private platform: Platform, private file: File) {
+  private route: Router, private authService: AuthService,private file: File) {
 
   }
 
@@ -147,6 +146,11 @@ constructor(private androidPermissions: AndroidPermissions,
   }
 
   async downloadFile(item:any){
+
+    const currentUser = this.authService.currentUserValue();
+    if(currentUser === null || !currentUser.value.access_token){
+      this.route.navigate(['tabs/login']);
+    }
 
     const loading = await this.commonService.createLoading("Downloading...");
     await loading.present();
