@@ -26,7 +26,7 @@ export class Configfile {
     });
   }
 
-  endpoint = "http://localhost:8188/xapiv1";
+  endpoint = "http://192.168.101.5:8188/xapiv1";
 
   urlToken = this.endpoint + "/oauth/token";
   urlFeedback = this.endpoint + "/feedback/save";

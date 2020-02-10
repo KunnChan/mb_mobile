@@ -10,8 +10,6 @@ import { Configfile } from '../configfile';
 export class ErrorInterceptor implements HttpInterceptor {
 
     private refreshTokenInProgress = false;
-    // Refresh Token Subject tracks the current token, or is null if no token is currently
-    // available (e.g. refresh pending).
     private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
     constructor(private authService: AuthService,
@@ -21,63 +19,38 @@ export class ErrorInterceptor implements HttpInterceptor {
 
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         return next.handle(req).pipe(catchError(err => {
-
-            if (err.error.error === "invalid_grant") {
-                const error = err.error.message || err.statusText;
-                //alert("Invalid Grant : "+ error + " }=> "+ JSON.stringify(err.error))
-                return throwError(error);
+            if(err.status === 401){
+                if (this.refreshTokenInProgress) {
+                    return this.refreshTokenSubject.pipe(filter( result => result !== null )
+                            ,take(1)
+                            ,switchMap(() => next.handle(this.addAuthenticationToken(req, null))))
+                }else{
+                    this.refreshTokenInProgress = true;
+                    this.refreshTokenSubject.next(null);
+                    return this.authService
+                                .refreshTokenObservable().pipe(switchMap(token => {
+                                    this.refreshTokenInProgress = false;
+                                    this.storage.set(this.config.keyAuth, token);
+                                    this.refreshTokenSubject.next(token);
+                                    return next.handle(this.addAuthenticationToken(req, token));
+                                }), catchError(err => {
+                                    this.refreshTokenInProgress = false;
+                                    return Observable.throw(err);
+                                }))
+                }
             }
-
-            if (this.refreshTokenInProgress) {
-                // If refreshTokenInProgress is true, we will wait until refreshTokenSubject has a non-null value
-                // – which means the new token is ready and we can retry the request again
-
-            return this.refreshTokenSubject.pipe(filter( result => result !== null )
-                    ,take(1)
-                    ,switchMap(() => next.handle(this.addAuthenticationToken(req))))
-            }else{
-                this.refreshTokenInProgress = true;
-    
-                // Set the refreshTokenSubject to null so that subsequent API calls will wait until the new token has been retrieved
-                this.refreshTokenSubject.next(null);
-
-                return this.authService
-                            .refreshTokenObservable().pipe(switchMap(token => {
-                                this.refreshTokenInProgress = false;
-    
-                             //   ConfigProvider.accessToken = token.access_token;
-                             //   ConfigProvider.refreshToken = token.refresh_token;
-    
-                                this.storage.set(this.config.keyAuth, token);
-    
-                                this.refreshTokenSubject.next(token);
-                                return next.handle(this.addAuthenticationToken(req));
-                            }), catchError(err => {
-                                this.refreshTokenInProgress = false;
-                             //   this.authService.logout();
-                                return Observable.throw(err);
-                            }))
-            }
-
-            return empty();
+            return throwError(err);
         }))
     }
     
-    addAuthenticationToken(request) {
+    addAuthenticationToken(request, token) {
        
-       // const accessToken = ConfigProvider.accessToken;
-       const accessToken = ""
-
-        // If access token is null this means that user is not logged in
-        // And we return the original request
-        if (!accessToken) {
+        if (!token) {
             return request;
         }
-
-        // We clone the request, because the original request is immutable
         return request.clone({
             setHeaders: {
-                Authorization: 'Bearer '+ accessToken,
+                Authorization: 'Bearer '+ token.access_token,
             }
         });
     }

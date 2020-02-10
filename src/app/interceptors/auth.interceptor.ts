@@ -21,7 +21,7 @@ export class AuthInterceptor implements HttpInterceptor {
             "manufacturer": information.manufacturer === null ? "": information.manufacturer,
             "platform": information.platform === null ? "": information.platform,
             "uuid": information.uuid === null ? "": information.uuid,
-            "lattlonn": information.lattlonn === null ? "": information.lattlonn
+            "latlon": information.lattlonn === null ? "": information.lattlonn
         }
         if(req.url.endsWith('/oauth/token')){
             let encryptKey = btoa(this.clientId + ':' + this.clientSecret);

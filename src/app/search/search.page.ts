@@ -1,7 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertController } from '@ionic/angular';
+import "../../app/mega.js";
+import { File as MegaFile } from "../../app/mega.js";
+
+import { AlertController, Platform } from '@ionic/angular';
 import { Router, ActivatedRoute } from '@angular/router';
+import { File } from '@ionic-native/file/ngx';
+
 import { SongService } from '../services/song.service';
+import { AuthService } from '../services/auth.service';
+import { AndroidPermissions } from '@ionic-native/android-permissions/ngx';
 
 @Component({
   selector: 'app-search',
@@ -20,11 +27,13 @@ export class SearchPage implements OnInit {
     size: 10
   }
 
+  playlist = []
   isLastSong: boolean = false;
   isSingleQuerySearch: boolean = true;
 
-  constructor(private alertController: AlertController,
-    private songService: SongService,
+  constructor(private alertController: AlertController,private router: Router,
+    private songService: SongService, private authService: AuthService, private file: File,
+    private androidPermissions: AndroidPermissions, private platform: Platform,
     private route: ActivatedRoute) { 
 
   }
@@ -133,9 +142,80 @@ export class SearchPage implements OnInit {
   }
 
   onDownload(item){
-    let index = this.items.indexOf(item);
-    this.items[index]['isOnDownloading'] = true;
+    const currentUser = this.authService.currentUserValue();
+    if(currentUser.value === null || !currentUser.value.access_token){
+      this.router.navigate(['tabs/login']);
+      return;
+    }
+    item['isOnDownloading'] = true;
+    this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE)
+    .then(status => {
+      if (status.hasPermission) {
+        this.downloadFile(item);
+      } 
+      else {
+        this.androidPermissions.requestPermission(this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE)
+          .then(status => {
+            if(status.hasPermission) {
+              this.downloadFile(item);
+            }
+          });
+      }
+    });
+
   }
+
+  async downloadFile(item:any){
+
+    let req = {
+      id: item.id,
+      userInfo: item.title
+    }
+    this.songService.getDownloadUrl(req)
+      .subscribe(data => {
+        if(data.downloadLinks[0].linkUrl){
+          this.prepareForDownload(item, data.downloadLinks[0].linkUrl)
+        }
+      }, error => {
+        console.log("Get song by Id error ", error);
+        item['isOnDownloading'] = false;
+      })
+  }
+
+  prepareForDownload(item, linkUrl){
+    const megaFile = MegaFile.fromURL(linkUrl);
+    
+    let path = null;
+    if(this.platform.is("ios")){
+      path = this.file.documentsDirectory;
+    }else{
+      path = this.file.externalDataDirectory;
+    }
+
+    megaFile.loadAttributes((error, megaFile) => {
+      console.log("file name => ", megaFile.name) // file name
+      const remoteFileName = megaFile.name;
+      const index = this.playlist.findIndex(li => li.name == remoteFileName);
+      if(index > -1){
+        // file already downloaded, no need to download again
+        item['isOnDownloading'] = false;
+      }else{
+        megaFile.download((err, data) => {
+          if (err){
+            item['isOnDownloading'] = false;
+            throw err
+          } 
+          this.file.writeFile(path, megaFile.name, data.buffer, {replace: true, append: false})
+          .then(res => {
+            item['isOnDownloading'] = false;
+          }).catch(error => {
+            item['isOnDownloading'] = false;
+          });
+        })
+      }
+    })
+  }
+
 
   onSearch(){
    

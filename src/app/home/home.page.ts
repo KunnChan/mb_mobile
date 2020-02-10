@@ -36,7 +36,7 @@ export class HomePage implements OnInit {
     page: 0,
     size: 10
   }
-
+  playlist = [];
   isLastAlbum = false;
   isLastSong = false;
 
@@ -49,6 +49,16 @@ constructor(private androidPermissions: AndroidPermissions, private platform: Pl
   ngOnInit() {
     this.getAlbums(this.reqAlbum);
     this.getPopularSong(this.reqData);
+
+    let path = null;
+    if(this.platform.is("ios")){
+      path = this.file.documentsDirectory;
+    }else{
+      path = this.file.externalDataDirectory;
+    }
+    if(path){
+      this.onGetFiles();
+    }
   }
 
   logScrollStart(){
@@ -64,9 +74,14 @@ constructor(private androidPermissions: AndroidPermissions, private platform: Pl
   }
 
   onDownload(item){
+
+    const currentUser = this.authService.currentUserValue();
+    if(currentUser.value === null || !currentUser.value.access_token){
+      this.route.navigate(['tabs/login']);
+      return;
+    }
     
     item['isOnDownloading'] = true;
-    this.downloadFile(item);
     this.androidPermissions.checkPermission(this.androidPermissions.PERMISSION.READ_EXTERNAL_STORAGE)
     .then(status => {
       if (status.hasPermission) {
@@ -147,29 +162,24 @@ constructor(private androidPermissions: AndroidPermissions, private platform: Pl
 
   async downloadFile(item:any){
 
-    const currentUser = this.authService.currentUserValue();
-    if(currentUser === null || !currentUser.value.access_token){
-      this.route.navigate(['tabs/login']);
-    }
-
-    const loading = await this.commonService.createLoading("Downloading...");
-    await loading.present();
-
     let req = {
       id: item.id,
-      userInfo: "Just info, will be update in future"
+      userInfo: item.title
     }
     this.songService.getDownloadUrl(req)
-      .subscribe(item => {
-        if(item.downloadLinks[0].linkUrl)
-        loading.dismiss();
+      .subscribe(data => {
+        if(data.downloadLinks[0].linkUrl){
+          this.prepareForDownload(item, data.downloadLinks[0].linkUrl)
+        }
       }, error => {
         console.log("Get song by Id error ", error);
+        item['isOnDownloading'] = false;
       })
+  }
 
-   // let url = "https://mega.nz/#!t8pk2SYJ!7Saoz3s5xfvsPln-8BXkqBnK48m9er_hnTg_HnjHw_k";
-    let url = "https://mega.nz/#!Mxxk0azQ!I_EN0GZL3OgYwxuIePGYxFt7KcmXL-A9bQoXS3kUcDs";
-
+  prepareForDownload(item, linkUrl){
+    const megaFile = MegaFile.fromURL(linkUrl);
+    
     let path = null;
     if(this.platform.is("ios")){
       path = this.file.documentsDirectory;
@@ -177,26 +187,27 @@ constructor(private androidPermissions: AndroidPermissions, private platform: Pl
       path = this.file.externalDataDirectory;
     }
 
-    const megaFile = MegaFile.fromURL(url);
-
     megaFile.loadAttributes((error, megaFile) => {
       console.log("file name => ", megaFile.name) // file name
-      console.log("file size => ", megaFile.size) // file size in bytes
-    
-      //path = path + megaFile.name;
-      megaFile.download((err, data) => {
-        if (err) throw err
-
-        this.file.writeFile(path, megaFile.name, data.buffer, {replace: true, append: false})
-        .then(res => {
-          loading.dismiss();
-          
-          this.commonService.presentInfoAlert("Download success "+ res.toURL());
-        }).catch(error => {
-          loading.dismiss();
-          this.commonService.presentInfoAlert("Fail to Download "+ JSON.stringify(error));
-        });
-      })
+      const remoteFileName = megaFile.name;
+      const index = this.playlist.findIndex(li => li.name == remoteFileName);
+      if(index > -1){
+        // file already downloaded, no need to download again
+        item['isOnDownloading'] = false;
+      }else{
+        megaFile.download((err, data) => {
+          if (err){
+            item['isOnDownloading'] = false;
+            throw err
+          } 
+          this.file.writeFile(path, megaFile.name, data.buffer, {replace: true, append: false})
+          .then(res => {
+            item['isOnDownloading'] = false;
+          }).catch(error => {
+            item['isOnDownloading'] = false;
+          });
+        })
+      }
     })
   }
 
@@ -255,6 +266,27 @@ constructor(private androidPermissions: AndroidPermissions, private platform: Pl
      setTimeout(() => {
       event.target.complete();
     }, 500);
+  }
+
+  onGetFiles(){
+
+    let path = null;
+    if(this.platform.is("ios")){
+      path = this.file.documentsDirectory;
+    }else{
+      path = this.file.externalDataDirectory;
+    }
+
+    this.file.listDir(path, "").then(result => {
+      for(let file of result){
+        if(file.isFile == true){
+          let info = this.commonService.getSongInfo(file.name);
+          info['path'] = file.nativeURL;
+          info['name'] = file.name;
+          this.playlist.push(info);          
+        }
+      }
+    })
   }
 
 }

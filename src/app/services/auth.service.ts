@@ -61,9 +61,8 @@ export class AuthService {
     return this.http
     .post(this.config.urlToken, body).pipe(map(user => {
         this.storage.set(this.config.keyUserName, reqData.username);
-        this.storage.set(this.config.keyAuth, user)
-        .then(res =>  this.getUserInfo(reqData.username))
         this.currentUserSubject.next(user);
+        this.storage.set(this.config.keyAuth, user)
         return user;
     }));
   }
@@ -74,13 +73,8 @@ export class AuthService {
   }
 
   refreshTokenObservable(): Observable<any> {
-    // const headers = getUrlEncodedHeader();
-    // const serviceUrl = ConfigProvider.serviceUrl;
-    // const refresh_token = ConfigProvider.refreshToken;
-    // const url = this.config.getUrl(serviceUrl, ConfigUrl.urlToken);
-    // let body = "grant_type=refresh_token&refresh_token=" + refresh_token;
-    // return this.http.post(url, body, { headers }).pipe(map(res => res));
-    return null;
+    let body = "grant_type=refresh_token&refresh_token=" + this.currentUserSubject.value.refresh_token;
+    return this.http.post(this.config.urlToken, body).pipe(map(res => res));
   }
 
   feedback(reqData): Observable<any>{
@@ -101,11 +95,6 @@ export class AuthService {
     return this.http
       .get(this.config.urlUserInfo + username).pipe(map(data => {
           return data;
-      })).subscribe(result => {
-        this.storage.set(this.config.keyUserInfo, result);
-      }, error => {
-        console.log("Error ", error);
-        
-      })
+      }))
   }
 }

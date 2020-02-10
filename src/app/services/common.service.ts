@@ -49,8 +49,8 @@ export class CommonService {
   
 
   getSongInfo(name){
-    //uid _Title _artist _album _length _size
-    //1122 _You are the one _Ni Ni Khin Zaw _Red _3.12 _4.5MB.mp3
+    //uid _Title _artist _album
+    //1122 _You are the one _Ni Ni Khin Zaw _Red.mp3
     let nameWithoutExt = name.split('.').slice(0, -1).join('.');
     let info = nameWithoutExt.split('_');
     let song = {
@@ -58,8 +58,6 @@ export class CommonService {
       title: info[1] ? info[1] : "Unknown",
       artist: info[2]? info[2] : "Unknown",
       album: info[3]? info[3] : "Unknown",
-      songlength: info[4]? info[4].replace(".",":") : "Unknown",
-      sizeinMb : info[5]? info[5] : "Unknown"
     }
     return song;
   }
